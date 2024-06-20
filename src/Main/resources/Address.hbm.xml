@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>  
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 5.3//EN"  
+ "http://hibernate.sourceforge.net/hibernate-mapping-5.3.dtd">  
+  
+<hibernate-mapping>
+    <class name = "com.i2i.sms.models.Address" table = "address">
+        <id name = "addressId" column = "id">
+            <generator class = "increment"/>
+        </id>
+        <property name = "doorNo" column = "door_no"/>
+        <property name = "street" column = "street"/>
+        <property name = "city" column = "city"/>
+        <property name = "state" column = "state"/>
+        <property name = "pinCode" column = "pin_code"/>
+        <one-to-one name="student" class="com.i2i.sms.models.Student" cascade = "all" />
+    </class>
+</hibernate-mapping>

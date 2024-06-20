@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "com.i2i.sms.models.Student" table = "students">
+        <id name = "id" column = "id">
+            <generator class = "increment"/>
+        </id>
+        <property name = "name" column = "name"/>
+        <property name = "dob" column = "dob" type = "date"/>
+        <many-to-one name = "grade" class = "com.i2i.sms.models.Grade" column = "grade_id" not-null = "true" cascade = "save-update" lazy = "false"/>
+        <one-to-one name = "address" class = "com.i2i.sms.models.Address" cascade = "all" lazy = "false"/>
+        <set name = "sportsActivities" table = "student_sports_activity" cascade = "save-update" lazy = "false">
+           <key column = "student_id"/>
+           <many-to-many column = "sport_id" class = "com.i2i.sms.models.SportsActivity"/>
+        </set>
+   </class>
+</hibernate-mapping>

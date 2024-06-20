@@ -1,4 +1,4 @@
-package com.i2i.cms.exception;
+package com.i2i.sms.exception;
 import java.lang.Exception;
 
 /**
@@ -7,8 +7,8 @@ import java.lang.Exception;
  * This exception caught and handle to provide detailed error information.
  * </p>
  */
-public class BankDetailException extends RuntimeException {
-  public BankDetailException(String message, Throwable t) {
+public class StudentException extends RuntimeException {
+  public StudentException(String message, Throwable t) {
     super(message, t);
   }
 }

@@ -1,4 +1,4 @@
-package com.i2i.cms.helper;
+package com.i2i.sms.helper;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
