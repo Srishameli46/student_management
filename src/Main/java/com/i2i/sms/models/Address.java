@@ -1,21 +1,45 @@
 package com.i2i.sms.models;
 
-import com.i2i.sms.models.Student;
-import com.i2i.sms.utils.DateUtils;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  * <p>
  * Class representing the address of the student which contains details 
- *    such as door number, street name, city, state, pin code and associate studentId.
+ *       such as door number, street name, city, state, pin code and associate studentId.
  * </p>
  */
+
+@Entity
+@Table(name = "address")
 public class Address {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private int addressId;
+
+  @Column(name = "door_no")
   private String doorNo;
+
+  @Column(name = "street")
   private String street;
+
+  @Column(name = "city")
   private String city;
+
+  @Column(name = "state")
   private String state;
+
+  @Column(name = "pin_code")
   private String pinCode;
+
+  @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
   private Student student;
 
   public int getAddressId() {

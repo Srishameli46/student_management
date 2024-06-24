@@ -22,8 +22,8 @@ public class AddressDao {
    *
    * @param studentId
    *         For which studentId is get from the user.
-   * @return address
-   *         Address of the student will be retrived with the door number, street name, city name, state name and pin code.
+   * @return Address
+   *         Address of the student will be retrieved with the door number, street name, city name, state name and pin code.
    *
    * @throws StudentException when there is no details on address to fetch by that particular student Id.
    *
@@ -47,10 +47,10 @@ public class AddressDao {
    * @param address
    *         For which address could not be null.
    *         The door number contains numerical values and some alphabets or special character(/).
-   *         The street name contains only alphabets and does not contains numbers or special characters.
-   *         The city name contains only alphabets and does not contains numbers or special characters.
-   *         The state name contains only alphabets and does not contains numbers or special characters.
-   *         The pin code contains only numerical values upto 6-digits and does not contains alphabets or special characters.
+   *         The street name contains only alphabets and does not contain numbers or special characters.
+   *         The city name contains only alphabets and does not contain numbers or special characters.
+   *         The state name contains only alphabets and does not contain numbers or special characters.
+   *         The pin code contains only numerical values upto 6-digits and does not contain alphabets or special characters.
    *
    * @throws StudentException when there is no address details provided.
    *

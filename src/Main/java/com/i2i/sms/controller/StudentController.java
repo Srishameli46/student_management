@@ -1,12 +1,10 @@
 package com.i2i.sms.controller;
 
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.helper.HibernateConnection;
 import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.SportsActivity;
@@ -22,7 +20,7 @@ import com.i2i.sms.utils.DateUtils;
  * <p>
  * Student controller handles all the operations related to the management based on the user's request.
  * It provide endpoints for creating new student details, grade details and address along with the other operations,includes
- *  - retriving the whole student details along with their associated grade and sports activity
+ *  - retrieving the whole student details along with their associated grade and sports activity
  *  - removing the student from all associated grade, address detail and the sports activities.
  * </p>
  */
@@ -45,7 +43,7 @@ public class StudentController {
     String name = "";
     while (!isValidName) {
       System.out.println("Enter name:");
-      name = scanner.next();
+      name = scanner.nextLine();
       isValidName = DataValidationUtils.validString(name);
         if (!isValidName) {
         System.out.println("Invalid Input\n");
@@ -56,7 +54,7 @@ public class StudentController {
     boolean isValidDate = true;
     Date validDob = null;
     do {
-      String dob =scanner.next();
+      String dob =scanner.nextLine();
       validDob = DateUtils.checkAndFormatDate(dob);
       if (null == validDob) {
         System.out.println("Invalid Input\n");
@@ -71,7 +69,6 @@ public class StudentController {
     try {
       Grade grade = gradeService.addGrade(standard);
       Student student = studentService.addStudent(name, validDob, address, grade);
-      int studentId = student.getId();
       System.out.println(student);
     } catch (StudentException e) {
         System.out.println(e.getMessage());
@@ -153,15 +150,24 @@ public class StudentController {
   public Address addAddress() { 
     System.out.println("ADD ADDRESS TO THE STUDENT DETAILS:\n");
     System.out.print("Enter doorNo\n");
-    String doorNo = scanner.next();
+    scanner.nextLine();
+    String doorNo = scanner.nextLine();
     System.out.print("Enter street name:\n");
-    String street = scanner.next();
+    String street = scanner.nextLine();
     System.out.print("Enter city:\n");
-    String city = scanner.next();
+    String city = scanner.nextLine();
     System.out.print("Enter state name:\n");
-    String state = scanner.next();
-    System.out.print("Enter PinCode name:\n");
-    String pinCode = scanner.next();
+    String state = scanner.nextLine();
+    boolean isValidPinCode= false;
+    String pinCode = "";
+    while (!isValidPinCode) {
+      System.out.println("Enter Pin Code:");
+      pinCode = scanner.nextLine();
+      isValidPinCode = DataValidationUtils.validPinCode(pinCode);
+      if (!isValidPinCode) {
+        System.out.println("Invalid Input\n");
+      }
+    }
     Address address = new Address();
     address.setDoorNo(doorNo);
     address.setStreet(street);

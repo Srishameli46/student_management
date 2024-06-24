@@ -1,18 +1,14 @@
 package com.i2i.sms.dao;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Query; 
 import org.hibernate.Session;       
 import org.hibernate.Transaction;  
  
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
-import com.i2i.sms.models.Address;
-import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
 
@@ -20,7 +16,7 @@ import com.i2i.sms.models.Student;
  * <p>
  * This sports activity class represents basic details such as sports name, tutor name, venue, sport Id. 
  * Additionally, it stored information about the student's such as name, studentId, grade details and the address detail.
- * Manage the information by the following operation like creating, retriving and removing the sports activity along with the associated students.
+ * Manage the information by the following operation like creating, retrieving and removing the sports activity along with the associated students.
  * </p>
  */
 public class SportsActivityDao {
@@ -82,10 +78,10 @@ public class SportsActivityDao {
   * </p>
   *
   * @param sportId
-  *        SportId is get from the user, allowed only numberical values.
+  *        SportId is get from the user, allowed only numerical values.
   * @return true if the sportActivity deleted or else return false.
   *
-  * @throws StudentException when the sportsActivity details are not deleted due to non-existance of the details.
+  * @throws StudentException when the sportsActivity details are not deleted due to non-existence of the details.
   * 
   */
   public boolean deleteSportsActivityById(int sportId) {
@@ -115,9 +111,9 @@ public class SportsActivityDao {
   * @param id
   *        id is the studentId get from the student details.
   * @param sportId
-  *        SportId is get from the user,that contains only numberical values.
+  *        SportId is get from the user,that contains only numerical values.
   *
-  * @throws StudentException when the sportsId are not matched or assigned to that particular student Id due to non-existance of the details.
+  * @throws StudentException when the sportsId are not matched or assigned to that particular student Id due to non-existence of the details.
   * 
   */
   public void insertStudentToSportActivity(int id,int sportId) {   
@@ -145,10 +141,10 @@ public class SportsActivityDao {
   * </p>
   *
   * @param sportId
-  *        SportId is get from the user, allowed only numberical values.
+  *        SportId is get from the user, allowed only numerical values.
   * @return details of all the students in that particular sports activity.
   *
-  * @throws StudentException when the sportsActivity details are not retrived due to non-existance of the details.
+  * @throws StudentException when the sportsActivity details are not retrieved due to non-existence of the details.
   * 
   */
   public List<Student> getStudentsInSport(int sportId) {
@@ -170,12 +166,12 @@ public class SportsActivityDao {
   * </p>
   *
   * @param studentId
-  *        Student unique Id given in interger alone.
+  *        Student unique Id given in integer alone.
   * @param sportId
-  *        SportId is get from the user, allowed only numberical values.
+  *        SportId is get from the user, allowed only numerical values.
   * @return true if the sportActivity deleted or else return false.
   *
-  * @throws StudentException when the sportsActivity details are not deleted due to non-existance of the details.
+  * @throws StudentException when the sportsActivity details are not deleted due to non-existence of the details.
   * 
   */
   public boolean removeStudentFromSportActivity(int studentId, int sportId) {

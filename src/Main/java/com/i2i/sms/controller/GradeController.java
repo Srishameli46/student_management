@@ -17,7 +17,7 @@ public class GradeController {
 
   /**
    * <p>
-   * Display all Grade details along with student informations.
+   * Display all Grade details along with student information.
    * </p>
    */
   public void displayGrade() {

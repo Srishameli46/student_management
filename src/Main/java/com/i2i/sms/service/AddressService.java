@@ -1,6 +1,5 @@
 package com.i2i.sms.service;
 
-import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.dao.AddressDao;
 import com.i2i.sms.models.Address;
 

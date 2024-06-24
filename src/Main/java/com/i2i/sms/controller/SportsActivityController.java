@@ -13,7 +13,7 @@ import com.i2i.sms.utils.DateUtils;
  * <p>
  * Sports activity controller handles all the operations related to the management based on the user's request.
  * It provide endpoints for creating new sports activity details, adding students to their related sports along with the other operations,includes
- *  - retriving the whole sports details along with their associated student and grade details.
+ *  - retrieving the whole sports details along with their associated student and grade details.
  *  - removing the student from all associated sport activities or remove the whole sport.
  * </p>
  */
@@ -96,9 +96,10 @@ public class SportsActivityController {
  */
   private void addSports() {
     System.out.println("Enter sport name : ");
-    String sportName = scanner.next();
+    scanner.nextLine();
+    String sportName = scanner.nextLine();
     System.out.println("Enter sport venue : ");
-    String sportVenue = scanner.next();
+    String sportVenue = scanner.nextLine();
     System.out.println("Enter start date (yyyy-MM-dd):");
     Date validStartDate = null;
     boolean isValidDate = true;
@@ -113,7 +114,7 @@ public class SportsActivityController {
     } while (isValidDate);
  
     System.out.println("Enter sport tutor : ");
-    String sportTutor = scanner.next();
+    String sportTutor = scanner.nextLine();
     try {
       SportsActivity sportsActivity = sportsActivityService.addSport(sportName, sportVenue, sportTutor, validStartDate);
       if (null != sportsActivity) {
@@ -128,7 +129,7 @@ public class SportsActivityController {
 
 /**
  * <p>
- * Diaplay all sport activity that students will participate.
+ * Display all sport activity that students will participate.
  * This includes sport Id, sport name, venue, tutor name and the start date.
  * </p>
  */

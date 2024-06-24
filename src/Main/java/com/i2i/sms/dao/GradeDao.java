@@ -1,6 +1,5 @@
 package com.i2i.sms.dao;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class GradeDao {
    
   /**
    * <p>
-   * Retrive all Grade that includes Standard, Section and Student Lists.
+   * Retrieve all Grade that includes Standard, Section and Student Lists.
    * </p>
    *
    * @return grade details standards, section and associated student details.
@@ -68,7 +67,7 @@ public class GradeDao {
     try (Session session = HibernateConnection.getSessionFactory().openSession()) {
       grades = session.createQuery("from Grade", Grade.class).list();
     } catch (Exception e) {
-        throw new StudentException("Unable to retrive all grade details", e);
+        throw new StudentException("Unable to retrieve all grade details", e);
     }
     return grades;
   }
@@ -84,7 +83,7 @@ public class GradeDao {
    *           Section get allocated either as A or B automatically.
    * @throws StudentException when there is no such standard or section exists to fetch.
    *
-   * @ return the grade details like standand and section, if not found return no details.
+   * @ return the grade details like standard and section, if not found return no details.
    *
    */
   public Grade getGradeByStandardAndSection(int standard, String section) {
@@ -102,15 +101,15 @@ public class GradeDao {
 
  /**
   * <p>
-  * This method provied whether the particular grade and section exists or not.
+  * This method provided whether the particular grade and section exists or not.
   * </p>
   *
   * @param standard 
-  *        The standard are provied by the user.
+  *        The standard are provided by the user.
   * @param section 
-  *        The section will allocated automatically and provided for the existance check.
+  *        The section will allocate automatically and provided for the existence check.
   *
-  * @throws Student exception when there no grade presents with that standard and section.
+  * @throws StudentException when no grade presents with that standard and section.
   * 
   * @return true if the grade already exists or return false.
   *        

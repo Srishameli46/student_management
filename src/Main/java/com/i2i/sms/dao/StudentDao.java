@@ -1,25 +1,20 @@
 package com.i2i.sms.dao;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query; 
 import org.hibernate.Session;      
 import org.hibernate.Transaction; 
  
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
-import com.i2i.sms.models.Address;
-import com.i2i.sms.models.Grade;
-import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
 
 /**
  * <p>
  * This student class represents basic details such as students name, date of birth and student Id. 
  * Additionally, it stored information about the student's grade and address details.
- * Manage the information by the following operation like creating, retriving and removing the students.
+ * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
 public class StudentDao {
@@ -29,7 +24,7 @@ public class StudentDao {
   * </p>
   * 
   * @param student
-  *          This student provide the input like name, Date of birth, Id of a student, grade details and the address for that student.
+  *          This student provide the input like name, Date of birth, id of a student, grade details and the address for that student.
   * @throws StudentException when there is no proper details provided from the user.
   *
   */
@@ -53,10 +48,10 @@ public class StudentDao {
    * </p>
    * 
    * @param id
-   *         For which Id of the student get be integer.
+   *         For which id of the student get be integer.
    * @throws StudentException when there is no such exists to fetch by the studentId.
    *
-   * @return all the student details of that Id, if not present return null.
+   * @return all the student details of that id, if not present return null.
    */
   public Student retriveStudentById(int id) {
     Student student = null;
@@ -71,7 +66,7 @@ public class StudentDao {
   /**
    * <p>
    * Get all Student details includes,
-   *      Name to be given in alphabets alone no other charcters allowed.
+   *      Name to be given in alphabets alone no other characters allowed.
    *      Date of birth of the student should be yyyy-MM-dd.
    *      Address of the student will be provided with the door number, street name, city name, state name and pin code.
    *      The grade details like standard, section along with the corresponding gradeId.   
@@ -97,7 +92,7 @@ public class StudentDao {
   * </p>
   *
   * @param id
-  *         Student unique Id given in interger alone.
+  *         Student unique Id given in integer alone.
   * @throws StudentException when there is no details to remove the student.
   *
   * @return true if the Id found and Removed, or return false.

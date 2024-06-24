@@ -1,10 +1,16 @@
 package com.i2i.sms.models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.i2i.sms.models.Student;
-import com.i2i.sms.utils.DateUtils;
 
 /**
  * <p>
@@ -13,10 +19,23 @@ import com.i2i.sms.utils.DateUtils;
  * </p>
  *
  */
+
+@Entity
+@Table(name = "grade")
 public class Grade {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "grade_id")
   private int gradeId;
+
+  @Column(name = "standard")
   private int standard;
+
+  @Column(name = "section")
   private String section;
+
+  @OneToMany(mappedBy = "grade", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
   private Set<Student> students  = new HashSet<>();;
   
   public void setStandard(int standard) {

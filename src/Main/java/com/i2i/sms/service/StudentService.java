@@ -3,25 +3,20 @@ package com.i2i.sms.service;
 import java.util.Date;
 import java.util.List;
 
-import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.dao.StudentDao;
 import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.Student;
-import com.i2i.sms.service.AddressService;
-import com.i2i.sms.service.GradeService;
-import com.i2i.sms.models.SportsActivity;
 
 /**
  * <p>
  * This student class represents basic details such as students name, date of birth and student Id. 
  * Additionally, it stored information about the student's grade and address details.
- * Manage the information by the following operation like creating, retriving and removing the students.
+ * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
 public class StudentService {
   private StudentDao studentDao = new StudentDao();
-  private GradeService gradeService = new GradeService();
   private AddressService addressService = new AddressService();
   
  /**
@@ -30,7 +25,7 @@ public class StudentService {
   * </p>
   *
   * @param name
-  *      Name to be given in alphabets alone no other charcters allowed.
+  *      Name to be given in alphabets alone no other characters allowed.
   * @param dob
   *      Date of birth of the student should be yyyy-MM-dd.
   * @param address
@@ -67,9 +62,9 @@ public class StudentService {
    * Display student details by their student Id.
    * </p>
    * 
-   * @param Id
-   *       Student unique Id given in interger alone.
-   * @return details of the student by the Id given to search.
+   * @param id
+   *       Student unique Id given in integer alone.
+   * @return details of the student by the id given to search.
    */
   public Student searchStudentById(int id) {
     return studentDao.retriveStudentById(id);
@@ -80,9 +75,9 @@ public class StudentService {
    * Remove the student by the student Id in the Student details, Grade details, address and their related sports activities.
    * </p>
    *
-   * @param Id
-   *       Student unique Id given in interger alone.
-   * @ return  the checking paramter whether the Id removed or not by true or false.
+   * @param id
+   *       Student unique id given in integer alone.
+   * @ return  the checking parameter whether the id removed or not by true or false.
    */
   public boolean removeStudentById(int id) {
     Student student = studentDao.retriveStudentById (id);

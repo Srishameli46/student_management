@@ -1,23 +1,48 @@
 package com.i2i.sms.models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.i2i.sms.models.Student;
-import com.i2i.sms.utils.DateUtils;
 
 /**
  * <p>
  * Class representing a sports activity which contains details about the sports such as sport ID,sport name, venue, tutor name, start date.
  * </p>
  */
+
+@Entity
+@Table(name = "sports_activity")
 public class SportsActivity {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "sport_id")
   private int sportId;
+
+  @Column(name = "sport_name")
   private String sportName;
+
+  @Column(name = "venue")
   private String venue;
+
+  @Column(name = "tutor_name")
   private String tutorName;
+
+  @Column(name = "start_date")
+  @Temporal(TemporalType.DATE)
   private Date startDate;
+
+  @ManyToMany(mappedBy = "sportsActivities", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
   private Set<Student> students = new HashSet<>();
 
   public int getSportId() {

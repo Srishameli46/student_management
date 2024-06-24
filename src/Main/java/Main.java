@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import com.i2i.sms.controller.AddressController;
 import com.i2i.sms.controller.GradeController;
 import com.i2i.sms.controller.SportsActivityController;
 import com.i2i.sms.controller.StudentController;
@@ -8,6 +9,7 @@ import com.i2i.sms.helper.HibernateConnection;
 public class Main {  
   private static Scanner scanner = new Scanner(System.in);
   private static StudentController studentController = new StudentController();
+  private static AddressController addressController = new AddressController();
   private static GradeController gradeController = new GradeController();
   private static SportsActivityController sportsActivityController = new SportsActivityController();
 
@@ -21,9 +23,10 @@ public class Main {
                        "3. Search by ID\n" + 
                        "4. Remove by ID\n" +
                        "5. Display classsRoom details\n" +
-                       "6. Manage Sports details\n" +
-                       "7. Participation of students into the sports\n" +
-                       "8. Exit\n");
+                       "6. Display Address of Particular student\n"+
+                       "7. Manage Sports details\n" +
+                       "8. Participation of students into the sports\n" +
+                       "9. Exit\n");
 
       int option = scanner.nextInt(); 
       switch (option) {
@@ -48,14 +51,18 @@ public class Main {
           break;
 
         case 6:
-          sportsActivityController.accessSportsDetails();
+          addressController.displayAddressByStudentId();
           break;
 
         case 7:
+          sportsActivityController.accessSportsDetails();
+          break;
+
+        case 8:
           sportsActivityController.addStudentToSports();
           break;
           
-        case 8:
+        case 9:
           HibernateConnection.shutdown();
           System.exit(0);
 

@@ -1,27 +1,32 @@
 package com.i2i.sms.helper;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
-/**
- * Helper class for managing Hibernate SessionFactory.
- */
-public class HibernateConnection {
-  private static final SessionFactory sessionFactory = buildSessionFactory();
 
   /**
    * <p>The method is used to build the SessionFactory.
    * <p>
-   * @return SessionFactory instance otherwise null
+   *
    */
-  private static SessionFactory buildSessionFactory() {
-    try {
-      return new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
-    } catch(Exception ex) {
-        System.err.println("Initial SessionFactory creation failed." + ex);
-        ex.printStackTrace();
+  public class HibernateConnection {
+
+    private static SessionFactory sessionFactory;
+
+    static{
+      try {
+        Dotenv dotenv = Dotenv.load();
+        Configuration configuration = new Configuration();
+        configuration.configure();
+        configuration.setProperty("hibernate.connection.url", dotenv.get("DATABASE_URL"));
+        configuration.setProperty("hibernate.connection.username", dotenv.get("DATABASE_USERNAME"));
+        configuration.setProperty("hibernate.connection.password", dotenv.get("DATABASE_PASSWORD"));
+        sessionFactory = configuration.buildSessionFactory();
+      } catch (Throwable ex) {
+        System.err.println("SessionFactory creation failed." + ex);
+        throw new ExceptionInInitializerError(ex);
+      }
     }
-    return null;
-  }
 
   /**
    * <p>Method to retrieve the SessionFactory instance.
@@ -40,3 +45,4 @@ public class HibernateConnection {
     getSessionFactory().close();
   }
 }
+

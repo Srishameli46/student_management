@@ -1,13 +1,9 @@
 package com.i2i.sms.service;
 
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.dao.SportsActivityDao;
-import com.i2i.sms.models.Address;
-import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
 
@@ -30,11 +26,11 @@ public class SportsActivityService {
   * </p>
   *
   * @param sportName
-  *        sport name contains only alphabets and does not contains numbers or special characters.
+  *        sport name contains only alphabets and does not contain numbers or special characters.
   * @param venue
-  *        venue is get from the user no numberical or alapha-numerical values are allowed.
+  *        venue is get from the user no numerical or alphanumerical values are allowed.
   * @param tutorName
-  *        tutor name contains only alphabets and does not contains numbers or special characters.
+  *        tutor name contains only alphabets and does not contain numbers or special characters.
   * @param startDate
   *        startDate  should be in the format yyyy-MM-dd alone.
   *
@@ -106,14 +102,14 @@ public class SportsActivityService {
 
  /**
   * <p>
-  * Remove or unenrollment of the student from the sport Activity by the sport Id  and the student id that provided.
+  * Remove or un-enrollment of the student from the sport Activity by the sport Id  and the student id that provided.
   * </p>
   *
   * @param studentId
-  *        Student unique Id given in interger alone.
+  *        Student unique Id given in integer alone.
   * @param sportId
   *        SportId is get from the user that should be allowed only in numerical.
-  * @return true if the student unenrolled from the sportActivity or else return false.
+  * @return true if the student un-enrolled from the sportActivity or else return false.
   *
   */
   public boolean removeStudentFromSportActivity(int studentId, int sportId) {

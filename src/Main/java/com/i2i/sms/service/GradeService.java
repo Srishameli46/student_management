@@ -2,11 +2,8 @@ package com.i2i.sms.service;
 
 import java.util.List;
 
-import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.dao.GradeDao;
-import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
-import com.i2i.sms.models.Student;
 
 /**
  * <p>
@@ -22,11 +19,11 @@ import com.i2i.sms.models.Student;
 public class GradeService {
   private GradeDao gradeDao = new GradeDao();
   private int sectionCount = 0;
-  private String[] sections = {"A" , "B"};
+  private final String[] sections = {"A" , "B"};
 
   /**
    * <p>
-   * Get standard, set section and if the standard already exixts, just add the student details along with the grade list.
+   * Get standard, set section and if the standard already exists, just add the student details along with the grade list.
    * If the grade not present, it will create new grade with provided standard and allocated section.
    * </p>
    * 
@@ -80,7 +77,7 @@ public class GradeService {
     
   /**
    * <p>
-   * Get standard and section and if the standard not exixts, it give null string. 
+   * Get standard and section and if the standard not exists, it give null string.
    * </p>
    * 
    * @param standard
@@ -89,7 +86,7 @@ public class GradeService {
    *           Section get allocated either as A or B automatically.
    *
    * @return standard and section for each student.
-   */  
+   */
   public Grade getGradeByStandardAndSection(int standard, String section) {
     return gradeDao.getGradeByStandardAndSection(standard, section);
   }
