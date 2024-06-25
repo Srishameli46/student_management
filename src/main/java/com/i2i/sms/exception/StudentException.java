@@ -1,4 +1,5 @@
 package com.i2i.sms.exception;
+
 import java.lang.Exception;
 
 /**
@@ -8,7 +9,7 @@ import java.lang.Exception;
  * </p>
  */
 public class StudentException extends RuntimeException {
-  public StudentException(String message, Throwable t) {
-    super(message, t);
-  }
+    public StudentException(String message, Throwable t) {
+        super(message, t);
+    }
 }
