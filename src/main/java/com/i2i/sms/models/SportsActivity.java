@@ -29,16 +29,16 @@ public class SportsActivity {
     @Column(name = "sport_id")
     private int sportId;
 
-    @Column(name = "sport_name")
+    @Column(name = "sport_name", nullable = false, length = 25)
     private String sportName;
 
-    @Column(name = "venue")
+    @Column(name = "venue", nullable = false, length = 20)
     private String venue;
 
-    @Column(name = "tutor_name")
+    @Column(name = "tutor_name", nullable = false, length = 30)
     private String tutorName;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 

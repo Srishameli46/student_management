@@ -24,19 +24,19 @@ public class Address {
     @Column(name = "id")
     private int addressId;
 
-    @Column(name = "door_no")
+    @Column(name = "door_no", nullable = false, length = 15)
     private String doorNo;
 
-    @Column(name = "street")
+    @Column(name = "street", nullable = false, length = 100)
     private String street;
 
-    @Column(name = "city")
+    @Column(name = "city", nullable = false, length = 20)
     private String city;
 
-    @Column(name = "state")
+    @Column(name = "state", nullable = false, length = 20)
     private String state;
 
-    @Column(name = "pin_code")
+    @Column(name = "pin_code",nullable = false, length = 7)
     private String pinCode;
 
     @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)

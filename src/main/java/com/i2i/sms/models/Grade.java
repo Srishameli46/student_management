@@ -28,10 +28,10 @@ public class Grade {
     @Column(name = "grade_id")
     private int gradeId;
 
-    @Column(name = "standard")
+    @Column(name = "standard", nullable = false)
     private int standard;
 
-    @Column(name = "section")
+    @Column(name = "section", nullable = false, length = 2)
     private String section;
 
     @OneToMany(mappedBy = "grade", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)

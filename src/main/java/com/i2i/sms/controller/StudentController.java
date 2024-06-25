@@ -121,8 +121,8 @@ public class StudentController {
                 System.out.println(foundStudent);
                 for (SportsActivity sport : foundStudent.getSportsActivities()) {
                     System.out.println(sport);
-                    logger.info("Searched student ID: {} founded", searchId);
                 }
+                logger.info("Searched student ID: {} founded", searchId);
             } else {
                 System.out.println("Student not found\n");
                 logger.info("Searched student ID: {} not founded", searchId);

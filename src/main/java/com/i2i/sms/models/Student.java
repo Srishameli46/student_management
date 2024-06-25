@@ -37,10 +37,10 @@ public class Student {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 36)
     private String name;
 
-    @Column(name = "dob")
+    @Column(name = "dob", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dob;
 

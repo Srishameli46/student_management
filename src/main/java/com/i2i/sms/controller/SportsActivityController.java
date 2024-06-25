@@ -83,14 +83,14 @@ public class SportsActivityController {
         do {
             System.out.println("Enter sport id to participate : ");
             int sportIdToParticipate = scanner.nextInt();
-            logger.info("Assigning student id {} to student id {}", studentId, sportIdToParticipate);
+            logger.info("Assigning student id {} to sport id {}", studentId, sportIdToParticipate);
             try {
                 sportsActivityService.addStudentToSportActivity(studentId, sportIdToParticipate);
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
             System.out.println("Enter 1 to participate in another sport or 0 to exit : ");
-            logger.info("Assigned student id {} to student id {}", studentId, sportIdToParticipate);
+            logger.info("Assigned student id {} to sport id {}", studentId, sportIdToParticipate);
             loop = scanner.nextInt();
         } while (loop == 1);
     }
@@ -173,7 +173,7 @@ public class SportsActivityController {
                 System.out.println(sport);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         System.out.println("Enter sport id : ");
         int sportId = scanner.nextInt();
