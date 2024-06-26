@@ -150,9 +150,11 @@ public class SportsActivityController {
             List<SportsActivity> sports = sportsActivityService.getAllSportsActivities();
             if (sports.isEmpty()) {
                 System.out.println("No sports available");
+                logger.info("No sports details available.");
             } else {
                 for (SportsActivity sport : sports) {
                     System.out.println(sport);
+                    logger.info("Retrieved and displayed all sports details.");
                 }
             }
         } catch (Exception e) {

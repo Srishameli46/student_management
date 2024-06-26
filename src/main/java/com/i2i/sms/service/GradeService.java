@@ -70,19 +70,7 @@ public class GradeService {
      * @return all the standard and sections within the grade along with their students.
      */
     public List<Grade> getAllGrades() {
-        return gradeDao.retriveAllGrades();
+        return gradeDao.retrieveAllGrades();
     }
 
-    /**
-     * <p>
-     * Get standard and section and if the standard not exists, it give null string.
-     * </p>
-     *
-     * @param standard For which the standard given for the student as 1 to 12.
-     * @param section  Section get allocated either as A or B automatically.
-     * @return standard and section for each student.
-     */
-    public Grade getGradeByStandardAndSection(int standard, String section) {
-        return gradeDao.getGradeByStandardAndSection(standard, section);
-    }
 }

@@ -2,11 +2,13 @@ package com.i2i.sms.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
 import com.i2i.sms.models.Address;
-import com.i2i.sms.models.Student;
+
 
 /**
  * <p>
@@ -15,6 +17,7 @@ import com.i2i.sms.models.Student;
  */
 public class AddressDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(AddressDao.class);
     /**
      * <p>
      * Get the address of the each student by the given studentId.
@@ -53,11 +56,14 @@ public class AddressDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to insert address detail ");
             session.save(address);
             transaction.commit();
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while inserting address detail");
+
             }
             throw new StudentException("Unable to set the address\n" + "\nPlease check the details provided", e);
         }

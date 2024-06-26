@@ -94,6 +94,7 @@ public class StudentController {
             List<Student> allStudents = studentService.getAllStudents();
             if (allStudents.isEmpty()) {
                 System.out.println("No students available\n");
+                logger.info("No student details available.");
             } else {
                 for (Student student : allStudents) {
                     System.out.println(student + "\n" + student.getSportsActivities());
@@ -162,7 +163,7 @@ public class StudentController {
      * </p>
      */
     public Address addAddress() {
-        logger.info("Adding address to student");
+        logger.debug("Adding address to student");
         System.out.println("ADD ADDRESS TO THE STUDENT DETAILS:\n");
         System.out.print("Enter doorNo\n");
         scanner.nextLine();

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} %L- %msg%n"/>
-        </Console>
         <RollingFile name="RollingFile" fileName="C:\Users\srishameli.nahamani\Desktop\log\student_application.log"
                      filePattern="C:\Users\srishameli.nahamani\Desktop\log\student_application-%d{yyyy-MM-dd}.log">
             <PatternLayout>
@@ -20,7 +17,7 @@
             <AppenderRef ref ="Console"/>
             <AppenderRef ref = "RollingFile"/>
         </logger>
-        <Root level="info">
+        <Root level="debug">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="RollingFile"/>
         </Root>

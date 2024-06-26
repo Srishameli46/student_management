@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -18,6 +20,8 @@ import com.i2i.sms.models.Student;
  * </p>
  */
 public class StudentDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentDao.class);
     /**
      * <p>
      * Insert all Students along with name, dob, studentId, grade and associated address details.
@@ -30,11 +34,13 @@ public class StudentDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to insert student with name: {}", student.getName());
             session.save(student);
             transaction.commit();
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while inserting student id: {}", student.getId());
             }
             throw new StudentException("Issue while Inserting\n" + student.getName() + "\nPlease Check the details provided...", e);
         }
@@ -49,7 +55,7 @@ public class StudentDao {
      * @return all the student details of that id, if not present return null.
      * @throws StudentException when there is no such exists to fetch by the studentId.
      */
-    public Student retriveStudentById(int id) {
+    public Student retrieveStudentById(int id) {
         Student student = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             student = session.get(Student.class, id);
@@ -71,7 +77,7 @@ public class StudentDao {
      * @return the list of student details
      * @throws StudentException when there is no details to fetch.
      */
-    public List<Student> retriveAllStudents() {
+    public List<Student> retrieveAllStudents() {
         List<Student> students = new ArrayList<>();
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             students = session.createQuery("from Student", Student.class).list();
@@ -94,6 +100,7 @@ public class StudentDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to delete student with id: {}", id);
             Student student = session.get(Student.class, id);
             if (null != student) {
                 session.delete(student);
@@ -103,6 +110,7 @@ public class StudentDao {
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while deleting student id: {}", id);
             }
             throw new StudentException("Unable to remove the student id " + id + " because there is no such studentId ....", e);
         }

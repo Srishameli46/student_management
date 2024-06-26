@@ -50,7 +50,7 @@ public class StudentService {
      * @return all student details with associated grade and address.
      */
     public List<Student> getAllStudents() {
-        return studentDao.retriveAllStudents();
+        return studentDao.retrieveAllStudents();
     }
 
     /**
@@ -62,7 +62,7 @@ public class StudentService {
      * @return details of the student by the id given to search.
      */
     public Student searchStudentById(int id) {
-        return studentDao.retriveStudentById(id);
+        return studentDao.retrieveStudentById(id);
     }
 
     /**
@@ -74,7 +74,7 @@ public class StudentService {
      * @ return  the checking parameter whether the id removed or not by true or false.
      */
     public boolean removeStudentById(int id) {
-        Student student = studentDao.retriveStudentById(id);
+        Student student = studentDao.retrieveStudentById(id);
         boolean found = false;
         if (null != student) {
             found = studentDao.deleteStudentById(id);

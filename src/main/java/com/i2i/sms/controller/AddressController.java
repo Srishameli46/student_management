@@ -25,13 +25,13 @@ public class AddressController {
         logger.info("Displaying Address for the student id: {}", id);
         try {
             Address address = addressService.getAddressByStudentId(id);
-            logger.info("Retrieved Address for the student id: {}", id);
             if (null == address) {
                 System.out.println("No Address available.\n");
                 logger.info("Address not available for the student id: {}", id);
             } else {
                 System.out.println("Student Id:" + id);
                 System.out.println(address);
+                logger.info("Retrieved Address for the student id: {}", id);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());

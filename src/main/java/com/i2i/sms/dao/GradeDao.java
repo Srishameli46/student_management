@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -25,25 +27,28 @@ import com.i2i.sms.models.Grade;
  */
 public class GradeDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(GradeDao.class);
     /**
      * <p>
      * Insert new Grade details such as Standard, Section and gradeId.
      * </p>
      *
      * @param grade For which grade has included standard, section and associated student details.
-     * @return gradeId
-     * grade id after insertion will be retrieved.
+     * @return grade
+     * grade after insertion will be retrieved.
      * @throws StudentException when there is no details to fetch and remove such grades.
      */
     public Grade insertGrade(Grade grade) {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to insert grade with standard: {} and section: {}", grade.getStandard(),grade.getSection());
             session.save(grade);
             transaction.commit();
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while inserting grade with standard: {} and section: {}", grade.getStandard(),grade.getSection());
             }
             throw new StudentException("Unable to insert " + grade.getStandard() + "\nPlease Check the details provided...", e);
         }
@@ -58,7 +63,7 @@ public class GradeDao {
      * @return grade details standards, section and associated student details.
      * @throws StudentException when unable to fetch the grade details like gradeId, standard and section.
      */
-    public List<Grade> retriveAllGrades() {
+    public List<Grade> retrieveAllGrades() {
         List<Grade> grades = new ArrayList<>();
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             grades = session.createQuery("from Grade", Grade.class).list();

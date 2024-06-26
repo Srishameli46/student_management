@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -20,6 +22,8 @@ import com.i2i.sms.models.Student;
  * </p>
  */
 public class SportsActivityDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(SportsActivityDao.class);
 
     /**
      * <p>
@@ -39,13 +43,15 @@ public class SportsActivityDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to insert sports activity detail {}", sportsActivity.getSportName());
             session.save(sportsActivity);
             transaction.commit();
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while inserting sports activity detail {}", sportsActivity.getSportName());
             }
-            throw new StudentException("Unable to add the sports activity\n" + sportsActivity + "\nPlease check the details provided....", e);
+            throw new StudentException("Unable to add the sports activity\n" + sportsActivity.getSportName() + "\nPlease check the details provided....", e);
         }
         return sportsActivity;
     }
@@ -81,6 +87,7 @@ public class SportsActivityDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to delete sports activity with id: {}", sportId);
             SportsActivity sportsActivity = session.get(SportsActivity.class, sportId);
             if (sportsActivity != null) {
                 session.delete(sportsActivity);
@@ -90,6 +97,7 @@ public class SportsActivityDao {
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while deleting sports activity with id: {}", sportId);
             }
             throw new StudentException("Unable to delete the sports activity for the sport Id " + sportId + ", since no values assigned....", e);
         }
@@ -109,6 +117,7 @@ public class SportsActivityDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to insert student id {} to sport id: {}", id, sportId);
             Student student = session.get(Student.class, id);
             SportsActivity sportsActivity = session.get(SportsActivity.class, sportId);
             if (null != student && null != sportsActivity) {
@@ -119,6 +128,7 @@ public class SportsActivityDao {
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while inserting student id {} to sport id: {}", id, sportId);
             }
             throw new StudentException("Unable to insert the student id " + id + " to their prefered sports id " + sportId + ", please check the details....", e);
         }
@@ -160,6 +170,7 @@ public class SportsActivityDao {
         Transaction transaction = null;
         try (Session session = HibernateConnection.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            logger.debug("Starting transaction to remove student id {} to sport id: {}", studentId, sportId);
             Student student = session.get(Student.class, studentId);
             SportsActivity sportsActivity = session.get(SportsActivity.class, sportId);
             if (null != student && null != sportsActivity) {
@@ -171,6 +182,7 @@ public class SportsActivityDao {
         } catch (Exception e) {
             if (null != transaction) {
                 transaction.rollback();
+                logger.warn("Transaction rolled back while removing student id {} to sport id: {}", studentId, sportId);
             }
             throw new StudentException("Unable to remove the sports detail of student Id " + studentId + " for the sport id " + sportId + ", since no values assigned....", e);
         }

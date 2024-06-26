@@ -32,6 +32,7 @@ public class GradeController {
             List<Grade> allGrades = gradeService.getAllGrades();
             if (allGrades.isEmpty()) {
                 System.out.println("No classrooms available.\n");
+                logger.info("No Grades available");
             } else {
                 for (Grade grade : allGrades) {
                     System.out.println(grade);
