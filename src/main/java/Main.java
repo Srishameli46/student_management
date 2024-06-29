@@ -1,28 +1,41 @@
 import java.util.Scanner;
 
-import com.i2i.sms.dao.AddressDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.i2i.sms.controller.AddressController;
 import com.i2i.sms.controller.GradeController;
 import com.i2i.sms.controller.SportsActivityController;
 import com.i2i.sms.controller.StudentController;
 import com.i2i.sms.helper.HibernateConnection;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
+@SpringBootApplication
+@ComponentScan(basePackages= "com.i2i.sms")
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static Scanner scanner = new Scanner(System.in);
-    private static StudentController studentController = new StudentController();
-    private static AddressController addressController = new AddressController();
-    private static GradeController gradeController = new GradeController();
-    private static SportsActivityController sportsActivityController = new SportsActivityController();
+    private Scanner scanner = new Scanner(System.in);
+    @Autowired
+    private StudentController studentController;
+    @Autowired
+    private AddressController addressController;
+    @Autowired
+    private GradeController gradeController;
+    @Autowired
+    private SportsActivityController sportsActivityController;
 
     public static void main(String args[]) {
+        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+        Main main = context.getBean(Main.class);
+        main.runApplication();
+    }
+
+    public void runApplication () {
         int input;
         do {
             System.out.println("STUDENT DETAILS:");
-            logger.debug("Starting the student application");
+
             System.out.println("Choose the operation\n" +
                     "1. Storing the details\n" +
                     "2. Display student details\n" +
@@ -70,7 +83,6 @@ public class Main {
 
                 case 9:
                     HibernateConnection.shutdown();
-                    logger.debug("Existing from student application");
                     System.exit(0);
 
                 default:
@@ -79,7 +91,6 @@ public class Main {
             System.out.println("\nGive 1 (continue) or 0 (exit)\n");
             input = scanner.nextInt();
             if (input == 0) {
-                logger.debug("Existing from student application");
                 HibernateConnection.shutdown();
             }
         } while (input == 1);

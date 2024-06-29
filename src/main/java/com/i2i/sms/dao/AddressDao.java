@@ -2,8 +2,10 @@ package com.i2i.sms.dao;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -15,9 +17,11 @@ import com.i2i.sms.models.Address;
  * Class implemented to store, collect, search and remove the student details.
  * </p>
  */
+@Repository
+@Component
 public class AddressDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(AddressDao.class);
+    private static final Logger logger = LogManager.getLogger(AddressDao.class);
     /**
      * <p>
      * Get the address of the each student by the given studentId.

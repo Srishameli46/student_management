@@ -1,5 +1,9 @@
 package com.i2i.sms.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import com.i2i.sms.dao.AddressDao;
 import com.i2i.sms.models.Address;
 
@@ -8,16 +12,18 @@ import com.i2i.sms.models.Address;
  * Class implemented to store, collect, search and remove the address details for the particular student.
  * </p>
  */
-
+@Service
+@Component
 public class AddressService {
-    private AddressDao addressDao = new AddressDao();
+    @Autowired
+    private AddressDao addressDao;
 
     /**
      * <p>
      * Add the Student address details which will be associated with the student.
      * </p>
      *
-     * @param Address For which address could not be null.
+     * @param address For which address could not be null.
      *                The door number contains numerical values and some alphabets or special character(/,-).
      *                The street name contains only alphabets and does not contains numbers or special characters.
      *                The city name contains only alphabets and does not contains numbers or special characters.
@@ -33,7 +39,7 @@ public class AddressService {
      * Get student's address details using their id.
      * </p>
      *
-     * @param Id Student unique Id given in String.
+     * @param studentId Student unique Id given in String.
      * @return a address of the student.
      */
     public Address getAddressByStudentId(int studentId) {

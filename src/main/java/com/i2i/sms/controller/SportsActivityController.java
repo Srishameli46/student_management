@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
@@ -20,11 +23,12 @@ import com.i2i.sms.utils.DateUtils;
  * - removing the student from all associated sport activities or remove the whole sport.
  * </p>
  */
-
+@RestController
+@Component
 public class SportsActivityController {
-    private static final Logger logger = LoggerFactory.getLogger(SportsActivityController.class);
-
-    private SportsActivityService sportsActivityService = new SportsActivityService();
+    private static final Logger logger = LogManager.getLogger(SportsActivityController.class);
+    @Autowired
+    private SportsActivityService sportsActivityService;
     private Scanner scanner = new Scanner(System.in);
 
     /**

@@ -4,20 +4,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
-import com.i2i.sms.service.AddressService;
 import com.i2i.sms.service.GradeService;
-import com.i2i.sms.service.SportsActivityService;
 import com.i2i.sms.service.StudentService;
 import com.i2i.sms.utils.DataValidationUtils;
 import com.i2i.sms.utils.DateUtils;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -27,14 +29,15 @@ import com.i2i.sms.utils.DateUtils;
  * - removing the student from all associated grade, address detail and the sports activities.
  * </p>
  */
+@RestController
+@Component
 public class StudentController {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
-
-    private StudentService studentService = new StudentService();
-    private AddressService addressService = new AddressService();
-    private GradeService gradeService = new GradeService();
-    private SportsActivityService sportsActivityService = new SportsActivityService();
+    private static final Logger logger = LogManager.getLogger(StudentController.class);
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private GradeService gradeService;
     private Scanner scanner = new Scanner(System.in);
 
     /**

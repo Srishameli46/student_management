@@ -3,11 +3,14 @@ package com.i2i.sms.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -25,9 +28,11 @@ import com.i2i.sms.models.Grade;
  * associating students with the grade.
  * </p>
  */
+@Repository
+@Component
 public class GradeDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(GradeDao.class);
+    private static final Logger logger = LogManager.getLogger(GradeDao.class);
     /**
      * <p>
      * Insert new Grade details such as Standard, Section and gradeId.

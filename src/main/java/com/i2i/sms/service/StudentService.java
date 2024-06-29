@@ -3,6 +3,10 @@ package com.i2i.sms.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import com.i2i.sms.dao.StudentDao;
 import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
@@ -15,9 +19,13 @@ import com.i2i.sms.models.Student;
  * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
+@Service
+@Component
 public class StudentService {
-    private StudentDao studentDao = new StudentDao();
-    private AddressService addressService = new AddressService();
+    @Autowired
+    private StudentDao studentDao;
+    @Autowired
+    private AddressService addressService;
 
     /**
      * <p>

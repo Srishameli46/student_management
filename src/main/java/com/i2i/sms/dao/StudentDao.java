@@ -3,10 +3,13 @@ package com.i2i.sms.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
@@ -19,9 +22,11 @@ import com.i2i.sms.models.Student;
  * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
+@Repository
+@Component
 public class StudentDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentDao.class);
+    private static final Logger logger = LogManager.getLogger(StudentDao.class);
     /**
      * <p>
      * Insert all Students along with name, dob, studentId, grade and associated address details.

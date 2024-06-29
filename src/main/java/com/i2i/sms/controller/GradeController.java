@@ -2,8 +2,11 @@ package com.i2i.sms.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.models.Grade;
@@ -15,10 +18,13 @@ import com.i2i.sms.service.GradeService;
  * It provide operation like displaying all students enrolled in the specific grade.
  * </p>
  */
+@RestController
+@Component
 public class GradeController {
-    private static final Logger logger = LoggerFactory.getLogger(GradeController.class);
+    private static final Logger logger = LogManager.getLogger(GradeController.class);
 
-    private GradeService gradeService = new GradeService();
+    @Autowired
+    private GradeService gradeService;
 
     /**
      * <p>

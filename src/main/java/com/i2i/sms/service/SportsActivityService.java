@@ -6,6 +6,9 @@ import java.util.List;
 import com.i2i.sms.dao.SportsActivityDao;
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -14,10 +17,11 @@ import com.i2i.sms.models.Student;
  * Manage the information by the following operation like creating, retriving and removing the sports activity along with the associated students.
  * </p>
  */
-
+@Service
+@Component
 public class SportsActivityService {
-
-    private SportsActivityDao sportsActivityDao = new SportsActivityDao();
+    @Autowired
+    private SportsActivityDao sportsActivityDao;
 
     /**
      * <p>

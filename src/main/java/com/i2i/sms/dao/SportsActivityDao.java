@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.helper.HibernateConnection;
 import com.i2i.sms.models.SportsActivity;
 import com.i2i.sms.models.Student;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -21,9 +24,11 @@ import com.i2i.sms.models.Student;
  * Manage the information by the following operation like creating, retrieving and removing the sports activity along with the associated students.
  * </p>
  */
+@Repository
+@Component
 public class SportsActivityDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(SportsActivityDao.class);
+    private static final Logger logger = LogManager.getLogger(SportsActivityDao.class);
 
     /**
      * <p>

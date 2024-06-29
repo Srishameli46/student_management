@@ -1,9 +1,11 @@
 package com.i2i.sms.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+@Component
 public final class DateUtils {
 
     private static SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");

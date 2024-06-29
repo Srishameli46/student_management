@@ -5,11 +5,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>The method is used to build the SessionFactory.
  * <p>
  */
+@Component
 public class HibernateConnection {
 
     private static SessionFactory sessionFactory;

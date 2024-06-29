@@ -2,6 +2,11 @@ package com.i2i.sms.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+
 import com.i2i.sms.dao.GradeDao;
 import com.i2i.sms.models.Grade;
 
@@ -16,8 +21,11 @@ import com.i2i.sms.models.Grade;
  * - Accessing and modifying that information, as well as for associating students with the grade.
  * </p>
  */
+@Service
+@Component
 public class GradeService {
-    private GradeDao gradeDao = new GradeDao();
+    @Autowired
+    private GradeDao gradeDao;
     private int sectionCount = 0;
     private final String[] sections = {"A", "B"};
 
