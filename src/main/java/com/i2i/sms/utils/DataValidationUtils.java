@@ -16,6 +16,21 @@ public final class DataValidationUtils {
     }
 
     /**
+     *<p>
+     * This method checks whether the given grade is within the range from 1 to 12.
+     *</p>
+     *
+     * @param grade
+     *        The grade which is to be validated.
+     *
+     * @return True if the grade is within the range, Ex: 12
+     *         False if the grade exceeds or lesser than, 0 Ex: 0 0r 13.
+     */
+
+    public static boolean isValidGrade(int grade) {
+        return (grade < 13 && grade >0);
+    }
+    /**
      * <p>
      * This method validates whether the given string contains only alphabetical words or not.
      * </p>

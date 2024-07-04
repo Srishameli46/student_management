@@ -2,14 +2,17 @@ package com.i2i.sms.controller;
 
 import java.util.List;
 
+import com.i2i.sms.dto.GradeWithStudentsResponseDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.models.Grade;
 import com.i2i.sms.service.GradeService;
 
 /**
@@ -19,7 +22,7 @@ import com.i2i.sms.service.GradeService;
  * </p>
  */
 @RestController
-@Component
+@RequestMapping("sms/api/1.0/grades")
 public class GradeController {
     private static final Logger logger = LogManager.getLogger(GradeController.class);
 
@@ -31,22 +34,17 @@ public class GradeController {
      * Display all Grade details along with student information.
      * </p>
      */
-    public void displayGrade() {
+    @GetMapping
+    public ResponseEntity<List<GradeWithStudentsResponseDto>> displayGrade() {
         System.out.println("DISPLAY CLASSROOM DETAILS");
         logger.info("Displaying Grades along with the students");
         try {
-            List<Grade> allGrades = gradeService.getAllGrades();
-            if (allGrades.isEmpty()) {
-                System.out.println("No classrooms available.\n");
-                logger.info("No Grades available");
-            } else {
-                for (Grade grade : allGrades) {
-                    System.out.println(grade);
-                }
-            }
+            List<GradeWithStudentsResponseDto> allGrades = gradeService.getAllGrades();
             logger.info("Retrieved Grades along with the students");
+            return new ResponseEntity<>(allGrades,HttpStatus.FOUND);
         } catch (StudentException e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

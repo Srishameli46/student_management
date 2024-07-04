@@ -1,19 +1,19 @@
 package com.i2i.sms.controller;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import com.i2i.sms.models.SportsActivity;
-import com.i2i.sms.models.Student;
+import com.i2i.sms.dto.CreateSportsRequestDto;
+import com.i2i.sms.dto.CreateStudentSportsRequestDto;
+import com.i2i.sms.dto.SportsResponseDto;
+import com.i2i.sms.dto.StudentResponseDto;
 import com.i2i.sms.service.SportsActivityService;
-import com.i2i.sms.utils.DateUtils;
 
 /**
  * <p>
@@ -24,79 +24,26 @@ import com.i2i.sms.utils.DateUtils;
  * </p>
  */
 @RestController
-@Component
+@RequestMapping("sms/api/1.0/sportsActivities")
 public class SportsActivityController {
     private static final Logger logger = LogManager.getLogger(SportsActivityController.class);
     @Autowired
     private SportsActivityService sportsActivityService;
-    private Scanner scanner = new Scanner(System.in);
-
-    /**
-     * <p>
-     * Get the various option from the student to access the sports details of the students.
-     * </p>
-     */
-    public void accessSportsDetails() {
-        while (true) {
-            System.out.println("\n1. Add Sports");
-            System.out.println("2. Display All Sports");
-            System.out.println("3. Display Students in particular sport");
-            System.out.println("4. Remove Sports From the list ");
-            System.out.println("5. Un-enrollment of the student from the sports ");
-            System.out.println("6. Exits");
-            System.out.println("Enter your choice : ");
-            int choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    addSports();
-                    break;
-                case 2:
-                    displayAllSports();
-                    break;
-                case 3:
-                    displayStudentsInSport();
-                    break;
-                case 4:
-                    removeSportById();
-                    break;
-                case 5:
-                    unenrollStudentFromSport();
-                    break;
-                case 6:
-                    return;
-                default:
-                    System.out.println("Invalid choice.");
-                    break;
-            }
-        }
-    }
 
     /**
      * <p>
      * Insert student into the sports activity according to their preference.
      * </p>
      */
-    public void addStudentToSports() {
-        System.out.println("Enter student id : ");
-        int studentId = scanner.nextInt();
-        List<SportsActivity> sportsActivities = sportsActivityService.getAllSportsActivities();
-        for (SportsActivity sport : sportsActivities) {
-            System.out.println(sport);
+    @PostMapping("/{id}/sports")
+    public ResponseEntity<List<SportsResponseDto>> addStudentToSports(@PathVariable int id, @RequestBody CreateStudentSportsRequestDto createStudentSportsRequestDto) {
+        logger.info("Assigning student id {} to sport ids", id);
+        try {
+            return new ResponseEntity<>(sportsActivityService.addStudentToSportActivity(id, createStudentSportsRequestDto), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error assigning student to sport", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        int loop;
-        do {
-            System.out.println("Enter sport id to participate : ");
-            int sportIdToParticipate = scanner.nextInt();
-            logger.info("Assigning student id {} to sport id {}", studentId, sportIdToParticipate);
-            try {
-                sportsActivityService.addStudentToSportActivity(studentId, sportIdToParticipate);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-            }
-            System.out.println("Enter 1 to participate in another sport or 0 to exit : ");
-            logger.info("Assigned student id {} to sport id {}", studentId, sportIdToParticipate);
-            loop = scanner.nextInt();
-        } while (loop == 1);
     }
 
     /**
@@ -105,40 +52,15 @@ public class SportsActivityController {
      * This includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
      */
-    private void addSports() {
+    @PostMapping
+    public ResponseEntity<SportsResponseDto> addSports(@RequestBody CreateSportsRequestDto createSportsRequestDto) {
         logger.info("Starting to create a new sport activity");
-        System.out.println("Enter sport name : ");
-        scanner.nextLine();
-        String sportName = scanner.nextLine();
-        System.out.println("Enter sport venue : ");
-        String sportVenue = scanner.nextLine();
-        System.out.println("Enter start date (yyyy-MM-dd):");
-        Date validStartDate = null;
-        boolean isValidDate = true;
-        do {
-            String date = scanner.next();
-            validStartDate = DateUtils.checkAndFormatDate(date);
-            if (null == validStartDate) {
-                System.out.println("Invalid Input\n");
-            } else {
-                isValidDate = false;
-            }
-        } while (isValidDate);
-
-        System.out.println("Enter sport tutor : ");
-        scanner.nextLine();
-        String sportTutor = scanner.nextLine();
         try {
-            SportsActivity sportsActivity = sportsActivityService.addSport(sportName, sportVenue, sportTutor, validStartDate);
-            if (null != sportsActivity) {
-                System.out.println("Sport inserted successfully");
-                logger.info("created a new sport activity with id :{}",sportsActivity.getSportId());
-            } else {
-                System.out.println("Failed to add sport");
-                logger.info("Failed to create new sport activity with id :{}",sportsActivity.getSportId());
-            }
+            SportsResponseDto sportsActivityInfo = sportsActivityService.addSport(createSportsRequestDto);
+            return new ResponseEntity<>(sportsActivityInfo, HttpStatus.CREATED);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error creating sport activity", e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -148,22 +70,21 @@ public class SportsActivityController {
      * This includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
      */
-    private void displayAllSports() {
+    @GetMapping
+    public ResponseEntity<List<SportsResponseDto>> displayAllSports() {
+        logger.info("Displaying all sports activity details");
         try {
-            logger.info("Displaying all sports activity details");
-            List<SportsActivity> sports = sportsActivityService.getAllSportsActivities();
+            List<SportsResponseDto> sports = sportsActivityService.getAllSportsActivities();
             if (sports.isEmpty()) {
-                System.out.println("No sports available");
                 logger.info("No sports details available.");
-            } else {
-                for (SportsActivity sport : sports) {
-                    System.out.println(sport);
-                    logger.info("Retrieved and displayed all sports details.");
-                }
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
             }
+            return new ResponseEntity<>(sports, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error displaying sports", e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     /**
@@ -172,31 +93,19 @@ public class SportsActivityController {
      * This provides student details along with their associated grade and address details.
      * </p>
      */
-    private void displayStudentsInSport() {
+    @GetMapping("/{id}")
+    public ResponseEntity<List<StudentResponseDto>> displayStudentsInSport(@PathVariable int id) {
+        logger.info("Displaying students in sport id {}", id);
         try {
-            List<SportsActivity> sports = sportsActivityService.getAllSportsActivities();
-            for (SportsActivity sport : sports) {
-                System.out.println(sport);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        System.out.println("Enter sport id : ");
-        int sportId = scanner.nextInt();
-        logger.info("Displaying students in sport id {}", sportId);
-        try {
-            List<Student> students = sportsActivityService.getStudentsInSport(sportId);
+            List<StudentResponseDto> students = sportsActivityService.getStudentsInSport(id);
             if (students.isEmpty()) {
-                System.out.println("No students Enrolled\n");
-                logger.info("No students Available in sport id {}", sportId);
-            } else {
-                for (Student student : students) {
-                    System.out.println(student);
-                }
+                logger.info("No students Available in sport id {}", id);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-            logger.info("Retrieved students in sport id {}", sportId);
+            return new ResponseEntity<>(students, HttpStatus.OK);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error displaying students in sport", e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -206,45 +115,21 @@ public class SportsActivityController {
      * This will remove the information includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
      */
-    private void removeSportById() {
-        System.out.println("Enter sport id to remove: ");
-        int sportIdToRemove = scanner.nextInt();
-        logger.info("Removing sport id {}", sportIdToRemove);
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> removeSportById(@PathVariable int id) {
         try {
-            if (sportsActivityService.removeSportById(sportIdToRemove)) {
-                System.out.println("Sport removed successfully");
-                logger.info("Removed sport id {}", sportIdToRemove);
+            if (sportsActivityService.removeSportById(id)) {
+                System.out.println("Sport id " + id + " removed successfully");
+                logger.info("Removed sport id {}", id);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
                 System.out.println("Failed to remove sport");
-                logger.info("failed to remove sport id {}", sportIdToRemove);
+                logger.info("failed to remove sport id {}", id);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
-        }
-    }
-
-    /**
-     * <p>
-     * Remove student from the user provided sports activities.
-     * This will remove the information from the student categories and sport activity will remain the same.
-     * </p>
-     */
-    private void unenrollStudentFromSport() {
-        System.out.println("Enter student id: ");
-        int studentIdToUnenroll = scanner.nextInt();
-        System.out.println("Enter sport id: ");
-        int sportIdToUnenroll = scanner.nextInt();
-        logger.info("Removing student id {} from sport id {}", studentIdToUnenroll, sportIdToUnenroll);
-        try {
-            if (sportsActivityService.removeStudentFromSportActivity(studentIdToUnenroll, sportIdToUnenroll)) {
-                System.out.println("Student removed from sport successfully");
-                logger.info("Removed student id {} from sport id {}", studentIdToUnenroll, sportIdToUnenroll);
-            } else {
-                System.out.println("Failed to remove student from sport");
-                logger.info("Failed remove student id {} from sport id {}", studentIdToUnenroll, sportIdToUnenroll);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

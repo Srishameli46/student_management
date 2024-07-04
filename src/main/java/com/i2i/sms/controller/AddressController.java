@@ -5,11 +5,15 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.models.Address;
+import com.i2i.sms.dto.AddressResponseDto;
 import com.i2i.sms.service.AddressService;
 
 
@@ -19,29 +23,28 @@ import com.i2i.sms.service.AddressService;
  * </p>
  */
 @RestController
-@Component
+@RequestMapping("sms/api/1.0/address")
 public class AddressController {
-    private static final Logger logger = LogManager.getLogger(GradeController.class);
+    private static final Logger logger = LogManager.getLogger(AddressController.class);
     @Autowired
     private AddressService addressService;
     private Scanner scanner = new Scanner(System.in);
 
-    public void displayAddressByStudentId() {
-        System.out.println("Enter student Id to display address:");
-        int id = scanner.nextInt();
+    @GetMapping("/{id}")
+    public ResponseEntity<AddressResponseDto> displayAddressByStudentId(@PathVariable int id) {
         logger.info("Displaying Address for the student id: {}", id);
         try {
-            Address address = addressService.getAddressByStudentId(id);
+            AddressResponseDto address = addressService.getAddressByStudentId(id);
             if (null == address) {
-                System.out.println("No Address available.\n");
                 logger.info("Address not available for the student id: {}", id);
+                return new ResponseEntity<>(address, HttpStatus.NOT_FOUND);
             } else {
-                System.out.println("Student Id:" + id);
-                System.out.println(address);
                 logger.info("Retrieved Address for the student id: {}", id);
+                return new ResponseEntity<>(address, HttpStatus.FOUND);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

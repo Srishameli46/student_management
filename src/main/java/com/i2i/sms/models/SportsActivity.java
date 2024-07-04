@@ -1,16 +1,8 @@
 package com.i2i.sms.models;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.*;
+
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +34,10 @@ public class SportsActivity {
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @ManyToMany(mappedBy = "sportsActivities", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name = "student_sports_activity",
+            joinColumns = @JoinColumn(name = "sport_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> students = new HashSet<>();
 
     public int getSportId() {
@@ -90,13 +85,12 @@ public class SportsActivity {
     }
 
     public void setStudents(Set<Student> students) {
-        this.students = students;
+       this.students = students;
     }
 
     public void addStudent(Student student) {
         if (!students.contains(student)) {
             students.add(student);
-            student.addSportsActivity(this);
         }
     }
 

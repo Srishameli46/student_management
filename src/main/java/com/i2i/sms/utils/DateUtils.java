@@ -5,10 +5,11 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static org.hibernate.type.descriptor.java.JdbcDateJavaType.DATE_FORMAT;
+
 @Component
 public final class DateUtils {
-
-    private static SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * <p>
@@ -16,18 +17,21 @@ public final class DateUtils {
      * </p>
      *
      * @param date holds the date in string in format of (yyyy-MM-dd).
-     * @return Date
-     * If the date format is correct, parses date with the given format.
-     * If the format is not correct, returns null.
+     * @return true or false
+     * If the date format is correct,return true .
+     * If the format is not correct, returns false.
      * This exception is raised when unable to parse another date format.
      * Ex: (yyyy/mm/dd)
      */
-    public static Date checkAndFormatDate(String date) {
+    public static boolean isValidDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
         try {
-            Date parsedDate = sqlDateFormat.parse(date);
-            return parsedDate;
+            String dateString = sdf.format(date);
+            sdf.parse(dateString);
+            return true;
         } catch (ParseException e) {
-            return null;
+            return false;
         }
     }
 

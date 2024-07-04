@@ -1,25 +1,26 @@
 package com.i2i.sms.models;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.i2i.sms.utils.DateUtils;
+
 
 /**
  * <p>
@@ -27,7 +28,6 @@ import com.i2i.sms.utils.DateUtils;
  * such as ID, name, date of birth, associated grade, address and their sportsActivity.
  * </p>
  */
-
 @Entity
 @Table(name = "students")
 public class Student {
@@ -119,23 +119,5 @@ public class Student {
         if (sportsActivities != null && sportsActivities.contains(sportsActivity)) {
             sportsActivities.remove(sportsActivity);
         }
-    }
-
-    public String toString() {
-        StringBuilder details = new StringBuilder();
-        details.append("\nStudent ID        : ").append(id)
-                .append("\nStudent Name      : ").append(name)
-                .append("\nStudent Dob      : ").append(dob)
-                .append("\nStudent Age       : ").append(DateUtils.calculatePeriodDifference(dob))
-                .append("\nStudent GradeId   : ").append(grade != null ? grade.getGradeId() : "No grade Id")
-                .append("\nStudent Standard  : ").append(grade != null ? grade.getStandard() : "No Standard")
-                .append("\nStudent Section   : ").append(grade != null ? grade.getSection() : "No Section");
-
-        if (null != address) {
-            details.append(address.toString());
-        } else {
-            details.append("\nAddress Details  : No address");
-        }
-        return details.toString();
     }
 }

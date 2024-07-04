@@ -1,25 +1,22 @@
 package com.i2i.sms.controller;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.models.Address;
-import com.i2i.sms.models.Grade;
-import com.i2i.sms.models.SportsActivity;
-import com.i2i.sms.models.Student;
-import com.i2i.sms.service.GradeService;
+import com.i2i.sms.dto.CreateStudentRequestDto;
+import com.i2i.sms.dto.StudentResponseDto;
+import com.i2i.sms.dto.StudentWithSportsResponseDto;
 import com.i2i.sms.service.StudentService;
+import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.utils.DataValidationUtils;
 import com.i2i.sms.utils.DateUtils;
-import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * <p>
@@ -30,58 +27,48 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  */
 @RestController
-@Component
+@RequestMapping("sms/api/1.0/students")
 public class StudentController {
 
     private static final Logger logger = LogManager.getLogger(StudentController.class);
     @Autowired
     private StudentService studentService;
-    @Autowired
-    private GradeService gradeService;
-    private Scanner scanner = new Scanner(System.in);
 
     /**
      * <p>
      * Get and create student details such as name, Date of birth and standard.
      * </p>
      **/
-    public void createStudent() {
-        logger.info("Starting to create a new student");
-        System.out.println("\nENTER DETAILS\n");
-        boolean isValidName = false;
-        String name = "";
-        while (!isValidName) {
-            System.out.println("Enter name:");
-            name = scanner.nextLine();
-            isValidName = DataValidationUtils.validString(name);
-            if (!isValidName) {
-                System.out.println("Invalid name format:"+ name + "\n");
-            }
+    @PostMapping
+    public ResponseEntity<StudentResponseDto> createStudent(@RequestBody CreateStudentRequestDto createStudentRequestDto) {
+        if (!DataValidationUtils.validString(createStudentRequestDto.getName())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
-        System.out.println("Enter Date of birth (yyyy-MM-dd):");
-        boolean isValidDate = true;
-        Date validDob = null;
-        do {
-            String dob = scanner.nextLine();
-            validDob = DateUtils.checkAndFormatDate(dob);
-            if (null == validDob) {
-                System.out.println("Invalid Date format:" + dob +"\n");
-            } else {
-                isValidDate = false;
-            }
-        } while (isValidDate);
-
-        System.out.println("Enter the standard :");
-        int standard = scanner.nextInt();
-        Address address = addAddress();
+        if(!DateUtils.isValidDate(createStudentRequestDto.getDob())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.isValidGrade(createStudentRequestDto.getStandard())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validString(createStudentRequestDto.getCreateAddressRequestDto().getStreet())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validString(createStudentRequestDto.getCreateAddressRequestDto().getCity())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validString(createStudentRequestDto.getCreateAddressRequestDto().getState())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validPinCode(createStudentRequestDto.getCreateAddressRequestDto().getPinCode())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        logger.info("Starting to create a new student");
         try {
-            Grade grade = gradeService.addGrade(standard);
-            Student student = studentService.addStudent(name, validDob, address, grade);
-            System.out.println(student);
-            logger.info("Created student id: {}",student.getId());
+            StudentResponseDto studentResponseDto = studentService.addStudent(createStudentRequestDto);
+            return new ResponseEntity<>(studentResponseDto, HttpStatus.CREATED);
         } catch (StudentException e) {
-            logger.error(e.getMessage());
+            logger.error("Error creating student", e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -90,22 +77,14 @@ public class StudentController {
      * Display student details such as name, Date of birth, Age, Id Along with associate grades.
      * </p>
      **/
-    public void displayStudent() {
+    @GetMapping
+    public ResponseEntity<List<StudentResponseDto>> displayStudent() {
         logger.info("Displaying all students with their details.");
-        System.out.println("\nDISPLAY STUDENT DETAILS");
         try {
-            List<Student> allStudents = studentService.getAllStudents();
-            if (allStudents.isEmpty()) {
-                System.out.println("No students available\n");
-                logger.info("No student details available.");
-            } else {
-                for (Student student : allStudents) {
-                    System.out.println(student + "\n" + student.getSportsActivities());
-                }
-            }
-            logger.info("Retrieved and displayed students details.");
+            return new ResponseEntity<>(studentService.getAllStudents(),HttpStatus.FOUND);
         } catch (StudentException e) {
-            logger.error(e.getMessage());
+            logger.error("Error in retrieving students", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -114,25 +93,22 @@ public class StudentController {
      * Search students by their Id.
      * </p>
      */
-    public void searchStudent() {
-        System.out.println("\nSearch By ID");
-        System.out.println("Enter student ID:");
-        int searchId = scanner.nextInt();
-        logger.info("Searching for student ID: {}", searchId);
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentWithSportsResponseDto> searchStudent(@PathVariable int id) {
+        logger.info("Search student id {}", id);
         try {
-            Student foundStudent = studentService.searchStudentById(searchId);
+            StudentWithSportsResponseDto foundStudent = studentService.searchStudentById(id);
             if (null != foundStudent) {
-                System.out.println(foundStudent);
-                for (SportsActivity sport : foundStudent.getSportsActivities()) {
-                    System.out.println(sport);
-                }
-                logger.info("Searched student ID: {} founded", searchId);
+                logger.info("Searched student ID: {} founded", id);
+                return new ResponseEntity<>(foundStudent, HttpStatus.FOUND);
             } else {
                 System.out.println("Student not found\n");
-                logger.info("Searched student ID: {} not founded", searchId);
+                logger.info("Searched student ID: {} not founded", id);
+                return new ResponseEntity<>(foundStudent, HttpStatus.NOT_FOUND);
             }
-        } catch (StudentException e) {
+        } catch (StudentException e){
             logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -141,60 +117,18 @@ public class StudentController {
      * Remove students by their Id.
      * </p>
      */
-    public void removeStudent() {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removeStudent(@PathVariable int id) {
         System.out.println("\nRemove Student by Id");
-        System.out.println("Enter student ID: ");
-        int removeId = scanner.nextInt();
-        logger.info("Removing student Id: {}", removeId);
         try {
-            boolean removedStudent = studentService.removeStudentById(removeId);
-            if (removedStudent) {
-                System.out.println("Student removed successfully.\n");
-                logger.info("Removed student Id: {}", removeId);
-            } else {
-                System.out.println("Student not found\n");
-                logger.info("Student Id: {} not found to remove", removeId);
-            }
+            studentService.removeStudentById(id);
+            logger.info("Removed student Id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (StudentException e) {
             logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * <p>
-     * Add address for the students.
-     * </p>
-     */
-    public Address addAddress() {
-        logger.debug("Adding address to student");
-        System.out.println("ADD ADDRESS TO THE STUDENT DETAILS:\n");
-        System.out.print("Enter doorNo\n");
-        scanner.nextLine();
-        String doorNo = scanner.nextLine();
-        System.out.print("Enter street name:\n");
-        String street = scanner.nextLine();
-        System.out.print("Enter city:\n");
-        String city = scanner.nextLine();
-        System.out.print("Enter state name:\n");
-        String state = scanner.nextLine();
-        boolean isValidPinCode = false;
-        String pinCode = "";
-        while (!isValidPinCode) {
-            System.out.println("Enter Pin Code:");
-            pinCode = scanner.nextLine();
-            isValidPinCode = DataValidationUtils.validPinCode(pinCode);
-            if (!isValidPinCode) {
-                System.out.println("Invalid Input\n");
-            }
-        }
-        Address address = new Address();
-        address.setDoorNo(doorNo);
-        address.setStreet(street);
-        address.setCity(city);
-        address.setState(state);
-        address.setPinCode(pinCode);
-        logger.info("Added address to student");
-        return address;
-    }
 }
 

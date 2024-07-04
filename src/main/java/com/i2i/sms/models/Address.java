@@ -1,13 +1,13 @@
 package com.i2i.sms.models;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * <p>
@@ -39,8 +39,6 @@ public class Address {
     @Column(name = "pin_code",nullable = false, length = 7)
     private String pinCode;
 
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
-    private Student student;
 
     public int getAddressId() {
         return addressId;
@@ -90,22 +88,5 @@ public class Address {
         this.pinCode = pinCode;
     }
 
-    public Student getStudent() {
-        return this.student;
-    }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public String toString() {
-        StringBuilder details = new StringBuilder();
-        details.append("\nAddress :")
-                .append(doorNo).append(", ")
-                .append(street).append(", ")
-                .append(city).append(", ")
-                .append(state).append(", ")
-                .append(pinCode).append("\n");
-        return details.toString();
-    }
 }
