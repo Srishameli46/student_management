@@ -33,6 +33,7 @@ public class StudentServiceImpl implements StudentService{
 
     @Autowired
     private StudentRepository studentRepository;
+
     @Autowired
     private GradeServiceImpl gradeServiceImpl;
 
@@ -122,15 +123,22 @@ public class StudentServiceImpl implements StudentService{
     public void removeStudentById(int id) {
         logger.debug("Started to delete student details");
         try {
-            Optional<Student> student = studentRepository.findById(id);
-            if(student.isPresent()){
-                Student studentToDelete = student.get();
-                studentToDelete.getGrade().getStudents().remove(studentToDelete);
+            Optional<Student> studentOptional = studentRepository.findById(id);
+            if (studentOptional.isPresent()) {
+                Student studentToDelete = studentOptional.get();
+                Grade grade = studentToDelete.getGrade();
+                if (grade != null) {
+                    grade.getStudents().remove(studentToDelete);
+                    gradeServiceImpl.addGrade(grade.getStandard()); // Ensure the grade entity is updated
+                }
                 studentRepository.delete(studentToDelete);
+                logger.debug("Successfully deleted student with ID: {}", id);
+            } else {
+                logger.warn("Student with ID: {} not found", id);
             }
         } catch (Exception e) {
-            logger.error("An error occurred while deleting the student id: {}", id, e);
-            throw new StudentException("Failed to save student with ID " + id, e);
+            logger.error("An error occurred while deleting the student with ID: {}", id, e);
+            throw new StudentException("Failed to delete student with ID " + id, e);
         }
     }
 

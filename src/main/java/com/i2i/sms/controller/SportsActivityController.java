@@ -34,6 +34,10 @@ public class SportsActivityController {
      * <p>
      * Insert student into the sports activity according to their preference.
      * </p>
+     *
+     * @param id This is the unique student id that must be numerical.
+     * @param createStudentSportsRequestDto This contains the student id along with their preferred sport ids.
+     * @return SportsResponseDto This gives the details of all the sports activity.
      */
     @PostMapping("/{id}/sports")
     public ResponseEntity<List<SportsResponseDto>> addStudentToSports(@PathVariable int id, @RequestBody CreateStudentSportsRequestDto createStudentSportsRequestDto) {
@@ -51,6 +55,9 @@ public class SportsActivityController {
      * Create new sport activity that students will participate.
      * This includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
+     *
+     * @param createSportsRequestDto This provides the details of the sport activity like name, venue, tutor name.
+     * @return SportsResponseDto This gives details of the sports activity.
      */
     @PostMapping
     public ResponseEntity<SportsResponseDto> addSports(@RequestBody CreateSportsRequestDto createSportsRequestDto) {
@@ -69,6 +76,8 @@ public class SportsActivityController {
      * Display all sport activity that students will participate.
      * This includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
+     *
+     * @return SportsResponseDto This gives details of all the sports activity.
      */
     @GetMapping
     public ResponseEntity<List<SportsResponseDto>> displayAllSports() {
@@ -92,6 +101,9 @@ public class SportsActivityController {
      * Display students details in the particular sport activity.
      * This provides student details along with their associated grade and address details.
      * </p>
+     *
+     * @param id This is the unique sport id that must be numerical.
+     * @return StudentResponseDto contains details of the student along with grade.
      */
     @GetMapping("/{id}")
     public ResponseEntity<List<StudentResponseDto>> displayStudentsInSport(@PathVariable int id) {
@@ -114,6 +126,8 @@ public class SportsActivityController {
      * Remove sports details in the particular sport activity.
      * This will remove the information includes sport Id, sport name, venue, tutor name and the start date.
      * </p>
+     *
+     * @param id This is the unique sport id that must be numerical.
      */
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> removeSportById(@PathVariable int id) {

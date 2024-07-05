@@ -33,6 +33,8 @@ public class GradeController {
      * <p>
      * Display all Grade details along with student information.
      * </p>
+     *
+     * @return GradeWithStudentsResponseDto contains the details of the grade like standard, section and gradeId along with student details.
      */
     @GetMapping
     public ResponseEntity<List<GradeWithStudentsResponseDto>> displayGrade() {

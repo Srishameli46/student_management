@@ -30,6 +30,15 @@ public class AddressController {
     private AddressService addressService;
     private Scanner scanner = new Scanner(System.in);
 
+
+    /**
+     * <p>
+     * Display all Address details based on the student Id.
+     * </p>
+     *
+     * @param id This is the unique student id that must be numerical.
+     * @return AddressResponseDto contains details of the address of particular student.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AddressResponseDto> displayAddressByStudentId(@PathVariable int id) {
         logger.info("Displaying Address for the student id: {}", id);

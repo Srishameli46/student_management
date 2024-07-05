@@ -38,6 +38,8 @@ public class StudentController {
      * <p>
      * Get and create student details such as name, Date of birth and standard.
      * </p>
+     * @param createStudentRequestDto This contains student name, date of birth, standard and address details.
+     * @return StudentResponseDto that includes all the details of the student.
      **/
     @PostMapping
     public ResponseEntity<StudentResponseDto> createStudent(@RequestBody CreateStudentRequestDto createStudentRequestDto) {
@@ -76,6 +78,7 @@ public class StudentController {
      * <p>
      * Display student details such as name, Date of birth, Age, Id Along with associate grades.
      * </p>
+     * @return StudentResponseDto that contains all details of the students.
      **/
     @GetMapping
     public ResponseEntity<List<StudentResponseDto>> displayStudent() {
@@ -92,6 +95,9 @@ public class StudentController {
      * <p>
      * Search students by their Id.
      * </p>
+     *
+     * @param id This is the unique id that must be numerical.
+     * @return StudentWithSportsResponseDto provides student details along with sports activity.
      */
     @GetMapping("/{id}")
     public ResponseEntity<StudentWithSportsResponseDto> searchStudent(@PathVariable int id) {
@@ -116,6 +122,8 @@ public class StudentController {
      * <p>
      * Remove students by their Id.
      * </p>
+     *
+     * @param id This is the unique id that must be numerical.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeStudent(@PathVariable int id) {

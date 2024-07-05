@@ -1,5 +1,3 @@
 target/
-.env
 .idea/
-*.class
 src/main/resources/application.properties
