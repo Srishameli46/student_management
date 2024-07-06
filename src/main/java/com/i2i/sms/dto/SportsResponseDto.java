@@ -1,30 +1,33 @@
 package com.i2i.sms.dto;
 
+import java.time.LocalDate;
+
 import com.i2i.sms.models.SportsActivity;
-
-import java.util.Date;
-
+/**
+ * <p>
+ * Class representing a sports activity which contains details about the sports
+ * such as sport ID,sport name, venue, tutor name.
+ * </p>
+ */
 public class SportsResponseDto {
 
-    private int sportId;
+    private String sportId;
     private String sportName;
     private String venue;
     private String tutorName;
-    private Date startDate;
 
     public SportsResponseDto(SportsActivity sportsActivity) {
         this.sportId = sportsActivity.getSportId();
         this.sportName = sportsActivity.getSportName();
         this.venue = sportsActivity.getVenue();
         this.tutorName = sportsActivity.getTutorName();
-        this.startDate = sportsActivity.getStartDate();
     }
 
-    public int getSportId() {
+    public String getSportId() {
         return sportId;
     }
 
-    public void setSportId(int sportId) {
+    public void setSportId(String sportId) {
         this.sportId = sportId;
     }
 
@@ -50,13 +53,5 @@ public class SportsResponseDto {
 
     public void setTutorName(String tutorName) {
         this.tutorName = tutorName;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 }

@@ -1,32 +1,38 @@
 package com.i2i.sms.dto;
 
+import java.time.LocalDate;
+
 import com.i2i.sms.models.Student;
 import com.i2i.sms.utils.DateUtils;
 
-import java.util.Date;
-
+/**
+ * <p>
+ * Class representing a student which contains details about the student
+ * such as ID, name, date of birth, associated grade, address and their sportsActivity.
+ * </p>
+ */
 public class StudentResponseDto {
-    private int id;
+    private String id;
     private String name;
-    private Date dob;
+    private LocalDate dob;
     private int age;
-    private AddressResponseDto addressResponseDto;
-    private GradeResponseDto gradeResponseDto;
+    private AddressDto address;
+    private GradeDto grade;
 
     public StudentResponseDto(Student student) {
         this.id = student.getId();
         this.name = student.getName();
         this.dob = student.getDob();
         this.age = DateUtils.calculatePeriodDifference(dob);
-        this.addressResponseDto = new AddressResponseDto(student.getAddress());
-        this.gradeResponseDto = new GradeResponseDto(student.getGrade());
+        this.address = new AddressDto(student.getAddress());
+        this.grade = new GradeDto(student.getGrade());
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -38,11 +44,11 @@ public class StudentResponseDto {
         this.name = name;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -54,19 +60,19 @@ public class StudentResponseDto {
         this.age = age;
     }
 
-    public AddressResponseDto getAddressInfo() {
-        return addressResponseDto;
+    public AddressDto getAddress() {
+        return address;
     }
 
-    public void setAddressInfo(AddressResponseDto addressResponseDto) {
-        this.addressResponseDto = addressResponseDto;
+    public void setAddress(AddressDto address) {
+        this.address = address;
     }
 
-    public GradeResponseDto getGradeInfo() {
-        return gradeResponseDto;
+    public GradeDto getGrade() {
+        return grade;
     }
 
-    public void setGradeInfo(GradeResponseDto grade) {
-        this.gradeResponseDto = grade;
+    public void setGrade(GradeDto grade) {
+        this.grade = grade;
     }
 }

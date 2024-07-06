@@ -1,5 +1,11 @@
 package com.i2i.sms.dto;
 
+/**
+ * <p>
+ * Class representing the address of the student which contains details
+ * such as door number, street name, city, state, pin code.
+ * </p>
+ */
 public class CreateAddressRequestDto {
     private String doorNo;
     private String street;

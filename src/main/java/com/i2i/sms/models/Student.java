@@ -15,12 +15,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.i2i.sms.utils.DateUtils;
-
 
 /**
  * <p>
@@ -33,19 +30,18 @@ import com.i2i.sms.utils.DateUtils;
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private int id;
+    private String id;
 
     @Column(name = "name", nullable = false, length = 36)
     private String name;
 
     @Column(name = "dob", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date dob;
+    private LocalDate dob;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "student")
     private Address address;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -66,19 +62,19 @@ public class Student {
         return name;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate  dob) {
         this.dob = dob;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

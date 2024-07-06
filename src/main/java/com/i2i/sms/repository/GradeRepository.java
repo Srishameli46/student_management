@@ -1,8 +1,9 @@
 package com.i2i.sms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.i2i.sms.models.Grade;
 import org.springframework.stereotype.Repository;
+
+import com.i2i.sms.models.Grade;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
  * </p>
  */
 @Repository
-public interface GradeRepository extends JpaRepository<Grade, Integer> {
+public interface GradeRepository extends JpaRepository<Grade, String> {
     Grade findByStandardAndSection(int standard, String section);
     boolean existsByStandardAndSection(int standard, String section);
 }

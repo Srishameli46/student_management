@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.i2i.sms.dto.CreateSportsRequestDto;
-import com.i2i.sms.dto.CreateStudentSportsRequestDto;
 import com.i2i.sms.dto.SportsResponseDto;
 import com.i2i.sms.dto.StudentResponseDto;
 import com.i2i.sms.service.SportsActivityService;
+import com.i2i.sms.utils.DataValidationUtils;
+import com.i2i.sms.utils.DateUtils;
+
 
 /**
  * <p>
@@ -24,7 +26,7 @@ import com.i2i.sms.service.SportsActivityService;
  * </p>
  */
 @RestController
-@RequestMapping("sms/api/1.0/sportsActivities")
+@RequestMapping("sms/api/v1/sportsActivities")
 public class SportsActivityController {
     private static final Logger logger = LogManager.getLogger(SportsActivityController.class);
     @Autowired
@@ -32,42 +34,34 @@ public class SportsActivityController {
 
     /**
      * <p>
-     * Insert student into the sports activity according to their preference.
-     * </p>
-     *
-     * @param id This is the unique student id that must be numerical.
-     * @param createStudentSportsRequestDto This contains the student id along with their preferred sport ids.
-     * @return SportsResponseDto This gives the details of all the sports activity.
-     */
-    @PostMapping("/{id}/sports")
-    public ResponseEntity<List<SportsResponseDto>> addStudentToSports(@PathVariable int id, @RequestBody CreateStudentSportsRequestDto createStudentSportsRequestDto) {
-        logger.info("Assigning student id {} to sport ids", id);
-        try {
-            return new ResponseEntity<>(sportsActivityService.addStudentToSportActivity(id, createStudentSportsRequestDto), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error assigning student to sport", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * <p>
      * Create new sport activity that students will participate.
-     * This includes sport Id, sport name, venue, tutor name and the start date.
+     * This includes sport Id, sport name, venue, tutor name.
      * </p>
      *
      * @param createSportsRequestDto This provides the details of the sport activity like name, venue, tutor name.
      * @return SportsResponseDto This gives details of the sports activity.
      */
     @PostMapping
-    public ResponseEntity<SportsResponseDto> addSports(@RequestBody CreateSportsRequestDto createSportsRequestDto) {
+    public ResponseEntity<?> addSports(@RequestBody CreateSportsRequestDto createSportsRequestDto) {
         logger.info("Starting to create a new sport activity");
+        if (!DataValidationUtils.validString(createSportsRequestDto.getSportName())) {
+            return new ResponseEntity<>("Invalid sport name format", HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validString(createSportsRequestDto.getTutorName())) {
+            return new ResponseEntity<>("Invalid tutor name format", HttpStatus.BAD_REQUEST);
+        }
         try {
             SportsResponseDto sportsActivityInfo = sportsActivityService.addSport(createSportsRequestDto);
-            return new ResponseEntity<>(sportsActivityInfo, HttpStatus.CREATED);
+            if (null == sportsActivityInfo) {
+                logger.info("Failed to create sport activity {}", createSportsRequestDto.getSportName());
+                return new ResponseEntity<>("Failed to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.BAD_REQUEST );
+            } else {
+                logger.info("Created sports activity {}", createSportsRequestDto.getSportName());
+                return new ResponseEntity<>(sportsActivityInfo, HttpStatus.CREATED);
+            }
         } catch (Exception e) {
-            logger.error("Error creating sport activity", e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Error creating sport activity {}",createSportsRequestDto.getSportName(), e);
+            return new ResponseEntity<>("Unable to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,20 +74,19 @@ public class SportsActivityController {
      * @return SportsResponseDto This gives details of all the sports activity.
      */
     @GetMapping
-    public ResponseEntity<List<SportsResponseDto>> displayAllSports() {
+    public ResponseEntity<?> displayAllSports() {
         logger.info("Displaying all sports activity details");
         try {
             List<SportsResponseDto> sports = sportsActivityService.getAllSportsActivities();
             if (sports.isEmpty()) {
                 logger.info("No sports details available.");
-                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>("No sports available", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(sports, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Error displaying sports", e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error in retrieving sports activities", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -102,48 +95,48 @@ public class SportsActivityController {
      * This provides student details along with their associated grade and address details.
      * </p>
      *
-     * @param id This is the unique sport id that must be numerical.
+     * @param id This is the unique sport id that must be uuid.
      * @return StudentResponseDto contains details of the student along with grade.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<List<StudentResponseDto>> displayStudentsInSport(@PathVariable int id) {
+    public ResponseEntity<?> displayStudentsInSport(@PathVariable String id) {
         logger.info("Displaying students in sport id {}", id);
         try {
             List<StudentResponseDto> students = sportsActivityService.getStudentsInSport(id);
             if (students.isEmpty()) {
                 logger.info("No students Available in sport id {}", id);
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No students available in sport id " + id,  HttpStatus.NOT_FOUND);
+            } else {
+                logger.info("Retrieved students in sport id {}", id);
+                return new ResponseEntity<>(students, HttpStatus.FOUND);
             }
-            return new ResponseEntity<>(students, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Error displaying students in sport", e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error in retrieving students in sport id " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * <p>
      * Remove sports details in the particular sport activity.
-     * This will remove the information includes sport Id, sport name, venue, tutor name and the start date.
+     * This will remove the information includes sport Id, sport name, venue, tutor name.
      * </p>
      *
-     * @param id This is the unique sport id that must be numerical.
+     * @param id This is the unique sport id that must be uuid.
      */
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> removeSportById(@PathVariable int id) {
+    private ResponseEntity<?> removeSportById(@PathVariable String id) {
         try {
             if (sportsActivityService.removeSportById(id)) {
-                System.out.println("Sport id " + id + " removed successfully");
                 logger.info("Removed sport id {}", id);
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>("Removed sport id " + id, HttpStatus.OK);
             } else {
-                System.out.println("Failed to remove sport");
-                logger.info("failed to remove sport id {}", id);
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                logger.info("Failed to remove sport id {}", id);
+                return new ResponseEntity<>("Sport id " + id + " not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error in removing sport activities", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

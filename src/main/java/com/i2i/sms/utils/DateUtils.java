@@ -2,11 +2,9 @@ package com.i2i.sms.utils;
 
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.hibernate.type.descriptor.java.JdbcDateJavaType.DATE_FORMAT;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeParseException;
 
 @Component
 public final class DateUtils {
@@ -16,21 +14,18 @@ public final class DateUtils {
      * Checks given date in format(yyyy-mm-dd) or not
      * </p>
      *
-     * @param date holds the date in string in format of (yyyy-MM-dd).
+     * @param inputDate holds the date in string in format of (yyyy-MM-dd).
      * @return true or false
      * If the date format is correct,return true .
      * If the format is not correct, returns false.
      * This exception is raised when unable to parse another date format.
      * Ex: (yyyy/mm/dd)
      */
-    public static boolean isValidDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false);
+    public static boolean isValidPastDate(LocalDate inputDate) {
         try {
-            String dateString = sdf.format(date);
-            sdf.parse(dateString);
-            return true;
-        } catch (ParseException e) {
+            LocalDate.parse(inputDate.toString());
+            return inputDate.isBefore(LocalDate.now());
+        } catch(DateTimeParseException e) {
             return false;
         }
     }
@@ -44,8 +39,8 @@ public final class DateUtils {
      * @return int
      * The count of number of years between the given date year and the current date year.
      */
-    public static int calculatePeriodDifference(Date date) {
-        Date currentDate = new Date();
-        return currentDate.getYear() - date.getYear();
+    public static int calculatePeriodDifference(LocalDate date) {
+        LocalDate currentDate = LocalDate.now();
+        return Period.between(date,currentDate).getYears();
     }
 }

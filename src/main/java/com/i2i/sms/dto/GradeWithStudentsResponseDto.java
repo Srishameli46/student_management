@@ -6,8 +6,17 @@ import java.util.List;
 import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.Student;
 
+/**
+ * <p>
+ * Class representing a grade, which can have standard and section
+ * The standard is the numerical value lies between 1 to 12.
+ * The section can either be 'A' or 'B'.
+ * The student which contains details
+ *   such as ID, name, date of birth, associated grade, address.
+ * </p>
+ */
 public class GradeWithStudentsResponseDto {
-    private int gradeId;
+    private String gradeId;
     private int standard;
     private String section;
     private List<StudentResponseDto> students = new ArrayList<>();
@@ -38,11 +47,11 @@ public class GradeWithStudentsResponseDto {
         this.standard = standard;
     }
 
-    public int getGradeId() {
+    public String getGradeId() {
         return gradeId;
     }
 
-    public void setGradeId(int gradeId) {
+    public void setGradeId(String gradeId) {
         this.gradeId = gradeId;
     }
 

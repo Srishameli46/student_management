@@ -1,8 +1,9 @@
 package com.i2i.sms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.i2i.sms.models.Address;
 import org.springframework.stereotype.Repository;
+
+import com.i2i.sms.models.Address;
 
 /**
  * <p>
@@ -10,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * </p>
  */
 @Repository
-public interface AddressRepository extends JpaRepository<Address, Integer> {
+public interface AddressRepository extends JpaRepository<Address, String> {
 }

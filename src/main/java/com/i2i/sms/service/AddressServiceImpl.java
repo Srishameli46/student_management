@@ -1,15 +1,16 @@
 package com.i2i.sms.service;
 
-import com.i2i.sms.dto.AddressResponseDto;
-import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.repository.AddressRepository;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.i2i.sms.dto.AddressResponseDto;
+import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.models.Address;
+import com.i2i.sms.repository.AddressRepository;
 
 /**
  * <p>
@@ -27,12 +28,19 @@ public class AddressServiceImpl implements AddressService{
      * Get student's address details using their id.
      * </p>
      *
-     * @param studentId Student unique Id given in String.
+     * @param studentId Student unique Id given in uuid.
      * @return a address of the student.
      */
-    public AddressResponseDto getAddressByStudentId(int studentId) {
+    public AddressResponseDto getAddressByStudentId(String studentId) {
         try {
-            return new AddressResponseDto(addressRepository.findById(studentId).orElse(null));
+            Optional<Address> address =  addressRepository.findById(studentId);
+            if(address.isPresent()){
+                Address addressDetail = address.get();
+                return new AddressResponseDto(addressDetail);
+            } else {
+                return null;
+            }
+
         } catch (Exception e) {
             logger.error("An error occurred while saving the student: {}", studentId, e);
             throw new StudentException("Failed to save student with ID " + studentId, e);
@@ -41,20 +49,22 @@ public class AddressServiceImpl implements AddressService{
 
     /**
      * <p>
-     * Get student's address details using their address id.
+     * Delete student's address details using their address id.
      * </p>
      *
-     * @param addressId Student unique Id given in String.
-     * @return address of the student.
+     * @param addressId Student unique Id given in uuid.
+     *
      */
-    public Address getById(int addressId) {
+    public void deleteById(String addressId) {
         try {
-            return addressRepository.findById(addressId)
-                    .orElseThrow(() -> new EntityNotFoundException("Address not found"));
+            Optional<Address> address = addressRepository.findById(addressId);
+            if (address.isPresent()) {
+                Address addressToDelete = address.get();
+                addressRepository.deleteById(addressToDelete.getAddressId());
+            }
         } catch (Exception e) {
             logger.error("An error occurred while retrieving the address: {}", addressId, e);
             throw new StudentException("Failed to retrieve address with ID " + addressId, e);
         }
     }
-
 }

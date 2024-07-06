@@ -1,7 +1,5 @@
 package com.i2i.sms.controller;
 
-import java.util.Scanner;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,37 +21,35 @@ import com.i2i.sms.service.AddressService;
  * </p>
  */
 @RestController
-@RequestMapping("sms/api/1.0/address")
+@RequestMapping("sms/api/v1/address")
 public class AddressController {
     private static final Logger logger = LogManager.getLogger(AddressController.class);
     @Autowired
     private AddressService addressService;
-    private Scanner scanner = new Scanner(System.in);
-
 
     /**
      * <p>
      * Display all Address details based on the student Id.
      * </p>
      *
-     * @param id This is the unique student id that must be numerical.
+     * @param id This is the unique student id that must be uuid.
      * @return AddressResponseDto contains details of the address of particular student.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AddressResponseDto> displayAddressByStudentId(@PathVariable int id) {
+    public ResponseEntity<?> displayAddressByStudentId(@PathVariable String id) {
         logger.info("Displaying Address for the student id: {}", id);
         try {
             AddressResponseDto address = addressService.getAddressByStudentId(id);
             if (null == address) {
                 logger.info("Address not available for the student id: {}", id);
-                return new ResponseEntity<>(address, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Address not found for student id " + id, HttpStatus.NOT_FOUND);
             } else {
                 logger.info("Retrieved Address for the student id: {}", id);
                 return new ResponseEntity<>(address, HttpStatus.FOUND);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Unable to retrieve address for student id " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

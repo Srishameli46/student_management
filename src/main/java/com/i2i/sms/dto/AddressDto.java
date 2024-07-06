@@ -1,36 +1,26 @@
 package com.i2i.sms.dto;
+
 import com.i2i.sms.models.Address;
 
 /**
  * <p>
  * Class representing the address of the student which contains details
- * such as address id, door number, street name, city, state, pin code.
+ * such as door number, street name, city, state, pin code.
  * </p>
  */
-public class AddressResponseDto {
-
-    private String addressId;
+public class AddressDto {
     private String doorNo;
     private String street;
     private String city;
     private String state;
     private String pinCode;
 
-    public AddressResponseDto(Address address) {
-        this.addressId = address.getAddressId();
+    public AddressDto(Address address) {
         this.doorNo = address.getDoorNo();
         this.street = address.getStreet();
         this.city = address.getCity();
         this.state = address.getState();
         this.pinCode = address.getPinCode();
-    }
-
-    public String getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
     }
 
     public String getDoorNo() {
@@ -72,5 +62,4 @@ public class AddressResponseDto {
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
     }
-
 }

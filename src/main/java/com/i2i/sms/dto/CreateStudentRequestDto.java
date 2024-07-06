@@ -1,13 +1,18 @@
 package com.i2i.sms.dto;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
+/**
+ * <p>
+ * Class representing a student which contains details about the student
+ * such as ID, name, date of birth, associated grade, address and their sportsActivity.
+ * </p>
+ */
 public class CreateStudentRequestDto {
     private String name;
-    private Date dob;
+    private LocalDate dob;
     private int standard;
-    private CreateAddressRequestDto createAddressRequestDto;
+    private CreateAddressRequestDto address;
 
     public String getName() {
         return name;
@@ -17,11 +22,11 @@ public class CreateStudentRequestDto {
         this.name = name;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -33,11 +38,11 @@ public class CreateStudentRequestDto {
         this.standard = standard;
     }
 
-    public CreateAddressRequestDto getCreateAddressRequestDto() {
-        return createAddressRequestDto;
+    public CreateAddressRequestDto getAddress() {
+        return address;
     }
 
-    public void setCreateAddressRequestDto(CreateAddressRequestDto createAddressRequestDto) {
-        this.createAddressRequestDto = createAddressRequestDto;
+    public void setAddress(CreateAddressRequestDto createAddressRequestDto) {
+        this.address = createAddressRequestDto;
     }
 }

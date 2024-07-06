@@ -3,8 +3,10 @@ package com.i2i.sms.service;
 import java.util.List;
 
 import com.i2i.sms.dto.CreateStudentRequestDto;
+import com.i2i.sms.dto.CreateStudentSportsRequestDto;
+import com.i2i.sms.dto.SportsResponseDto;
 import com.i2i.sms.dto.StudentResponseDto;
-import com.i2i.sms.dto.StudentWithSportsResponseDto;
+import com.i2i.sms.dto.StudentWithAllDetailsDto;
 
 /**
  * <p>
@@ -16,6 +18,9 @@ import com.i2i.sms.dto.StudentWithSportsResponseDto;
 public interface StudentService {
     StudentResponseDto addStudent(CreateStudentRequestDto createStudentRequestDto);
     List<StudentResponseDto> getAllStudents();
-    StudentWithSportsResponseDto searchStudentById(int id);
-    void removeStudentById(int id);
-}
+    StudentWithAllDetailsDto searchStudentById(String id);
+    boolean removeStudentById(String id);
+    StudentResponseDto updateStudent(String id, CreateStudentRequestDto createStudentRequestDto);
+   List<SportsResponseDto> addStudentToSportActivity(String studentId, CreateStudentSportsRequestDto createStudentSportsRequestDto);
+
+    }

@@ -1,6 +1,7 @@
 package com.i2i.sms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.i2i.sms.models.Student;
 
 /**
@@ -10,5 +11,5 @@ import com.i2i.sms.models.Student;
  * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+public interface StudentRepository extends JpaRepository<Student, String> {
 }

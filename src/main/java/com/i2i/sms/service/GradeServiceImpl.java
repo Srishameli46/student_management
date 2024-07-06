@@ -3,7 +3,6 @@ package com.i2i.sms.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,23 +95,6 @@ public class GradeServiceImpl implements GradeService {
         } catch (Exception e) {
             logger.error("An error occurred while retrieving the grades", e);
             throw new StudentException("Failed to get all details ", e);
-        }
-    }
-
-    /**
-     * <p>
-     * Retrieve Grade details along with student details by gradeId.
-     * </p>
-     * @param gradeId It is the unique integer.
-     * @return the standard and section within the gradeId along with their students.
-     */
-    public Grade getById(int gradeId) throws StudentException{
-        try {
-            return gradeRepository.findById(gradeId)
-                    .orElseThrow(() -> new EntityNotFoundException("Grade not found"));
-        } catch (Exception e) {
-            logger.error("An error occurred while retrieving the grade id: {}", gradeId, e);
-            throw new StudentException("Failed to retrieved grade with ID " + gradeId, e);
         }
     }
 }

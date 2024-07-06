@@ -3,13 +3,14 @@ package com.i2i.sms.models;
 import jakarta.persistence.*;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * <p>
- * Class representing a sports activity which contains details about the sports such as sport ID,sport name, venue, tutor name, start date.
+ * Class representing a sports activity which contains details about the sports
+ *    such as sport ID,sport name, venue, tutor name.
  * </p>
  */
 
@@ -17,9 +18,9 @@ import java.util.Set;
 @Table(name = "sports_activity")
 public class SportsActivity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "sport_id")
-    private int sportId;
+    private String sportId;
 
     @Column(name = "sport_name", nullable = false, length = 25)
     private String sportName;
@@ -30,21 +31,17 @@ public class SportsActivity {
     @Column(name = "tutor_name", nullable = false, length = 30)
     private String tutorName;
 
-    @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "student_sports_activity",
             joinColumns = @JoinColumn(name = "sport_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     private Set<Student> students = new HashSet<>();
 
-    public int getSportId() {
+    public String getSportId() {
         return sportId;
     }
 
-    public void setSportId(int sportId) {
+    public void setSportId(String sportId) {
         this.sportId = sportId;
     }
 
@@ -70,14 +67,6 @@ public class SportsActivity {
 
     public void setTutorName(String tutorName) {
         this.tutorName = tutorName;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public Set<Student> getStudents() {
@@ -107,8 +96,7 @@ public class SportsActivity {
                 .append(" Sports Id : ").append(sportId).append("\n")
                 .append(" Sports Name : ").append(sportName).append("\n")
                 .append(" Venue : ").append(venue).append("\n")
-                .append(" Tutor Name : ").append(tutorName).append("\n")
-                .append(" Start Date : ").append(startDate).append("\n");
+                .append(" Tutor Name : ").append(tutorName).append("\n");
         return details.toString();
     }
 }

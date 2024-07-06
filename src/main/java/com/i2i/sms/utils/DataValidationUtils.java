@@ -2,8 +2,6 @@ package com.i2i.sms.utils;
 
 import org.springframework.stereotype.Component;
 
-import java.util.regex.Matcher;
-
 /**
  * <p>
  * This class deals with validating the datatype of the given data.

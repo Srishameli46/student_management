@@ -1,11 +1,12 @@
 package com.i2i.sms.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.i2i.sms.dto.CreateSportsRequestDto;
-import com.i2i.sms.dto.CreateStudentSportsRequestDto;
 import com.i2i.sms.dto.SportsResponseDto;
 import com.i2i.sms.dto.StudentResponseDto;
+import com.i2i.sms.models.SportsActivity;
 
 /**
  * <p>
@@ -17,8 +18,8 @@ import com.i2i.sms.dto.StudentResponseDto;
 public interface SportsActivityService {
     SportsResponseDto addSport(CreateSportsRequestDto createSportsRequestDto);
     List<SportsResponseDto> getAllSportsActivities();
-    boolean removeSportById(int sportId);
-    List<SportsResponseDto> addStudentToSportActivity(int studentId, CreateStudentSportsRequestDto createStudentSportsRequestDto);
-    List<StudentResponseDto> getStudentsInSport(int sportId);
+    boolean removeSportById(String sportId);
+    Optional<SportsActivity> getSportDetailsById (String id);
+    List<StudentResponseDto> getStudentsInSport(String sportId);
 
 }

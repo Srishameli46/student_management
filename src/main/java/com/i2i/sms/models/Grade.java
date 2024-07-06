@@ -18,15 +18,14 @@ import java.util.Set;
  * This class provides methods to manage the students associated with their standard and section.
  * </p>
  */
-
 @Entity
 @Table(name = "grade")
 public class Grade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "grade_id")
-    private int gradeId;
+    private String gradeId;
 
     @Column(name = "standard", nullable = false)
     private int standard;
@@ -53,11 +52,11 @@ public class Grade {
         return section;
     }
 
-    public void setGradeId(int gradeId) {
+    public void setGradeId(String gradeId) {
         this.gradeId = gradeId;
     }
 
-    public int getGradeId() {
+    public String getGradeId() {
         return gradeId;
     }
 
