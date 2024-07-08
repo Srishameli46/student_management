@@ -47,7 +47,7 @@ public class GradeController {
                 return new ResponseEntity<>("No grades exists", HttpStatus.NOT_FOUND);
             } else {
                 logger.info("Retrieved grades along with their students");
-                return new ResponseEntity<>(allGrades, HttpStatus.FOUND);
+                return new ResponseEntity<>(allGrades, HttpStatus.OK);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());

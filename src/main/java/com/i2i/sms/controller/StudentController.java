@@ -92,7 +92,7 @@ public class StudentController {
             if (students.isEmpty()) {
                 return new ResponseEntity<>("Students not found", HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(students, HttpStatus.FOUND);
+                return new ResponseEntity<>(students, HttpStatus.OK);
             }
         } catch (StudentException e) {
             logger.error("Error in retrieving students", e);
@@ -115,7 +115,7 @@ public class StudentController {
             StudentWithAllDetailsDto foundStudent = studentService.searchStudentById(id);
             if (null != foundStudent) {
                 logger.info("Searched student ID: {} founded", id);
-                return new ResponseEntity<>(foundStudent, HttpStatus.FOUND);
+                return new ResponseEntity<>(foundStudent, HttpStatus.OK);
             } else {
                 logger.info("Searched student ID: {} not founded", id);
                 return new ResponseEntity<>("Student id  " + id + " not found", HttpStatus.NOT_FOUND);

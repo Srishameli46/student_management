@@ -109,7 +109,7 @@ public class SportsActivityController {
                     return new ResponseEntity<>("No students available in sport id " + id ,HttpStatus.OK);
                 } else {
                     logger.info("Retrieved students in sport id {}", id);
-                    return new ResponseEntity<>(students, HttpStatus.FOUND);
+                    return new ResponseEntity<>(students, HttpStatus.OK);
                 }
             } else {
                 logger.info("No sport id {}", id);

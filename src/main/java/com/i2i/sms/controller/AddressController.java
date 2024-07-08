@@ -45,7 +45,7 @@ public class AddressController {
                 return new ResponseEntity<>("Address not found for student id " + id, HttpStatus.NOT_FOUND);
             } else {
                 logger.info("Retrieved Address for the student id: {}", id);
-                return new ResponseEntity<>(address, HttpStatus.FOUND);
+                return new ResponseEntity<>(address, HttpStatus.OK);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());
