@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.i2i.sms.models.Address;
 
+import java.util.Optional;
+
 /**
  * <p>
  * This interface implemented to store, collect, search and remove the student address details.
@@ -12,4 +14,5 @@ import com.i2i.sms.models.Address;
  */
 @Repository
 public interface AddressRepository extends JpaRepository<Address, String> {
+    Optional<Address> findByStudentId(String studentId);
 }

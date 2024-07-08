@@ -21,5 +21,6 @@ public interface SportsActivityService {
     boolean removeSportById(String sportId);
     Optional<SportsActivity> getSportDetailsById (String id);
     List<StudentResponseDto> getStudentsInSport(String sportId);
+    boolean isSportsActivityExist(String sportId);
 
 }

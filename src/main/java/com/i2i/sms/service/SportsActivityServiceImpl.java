@@ -1,5 +1,6 @@
 package com.i2i.sms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ import com.i2i.sms.repository.SportsActivityRepository;
  * </p>
  */
 @Service
-public class SportsActivityServiceImpl implements SportsActivityService{
+public class SportsActivityServiceImpl implements SportsActivityService {
     private static final Logger logger = LogManager.getLogger(SportsActivityServiceImpl.class);
     @Autowired
     private SportsActivityRepository sportsActivityRepository;
@@ -35,6 +36,7 @@ public class SportsActivityServiceImpl implements SportsActivityService{
      * Create new sports Activity that students need to participate .
      * This contains the details of the sports such as sport id, sport name, venue, date-of-joining and sport tutor which has to be added.
      * </p>
+     *
      * @param createSportsRequestDto sports details contains sport name, venue, tutor name.
      * @return SportsInfo this provides all the information of that sport.
      */
@@ -99,7 +101,7 @@ public class SportsActivityServiceImpl implements SportsActivityService{
      * @param id SportId is get from the user that should be allowed only in numerical.
      * @return details of all the sports details in that particular sports activity.
      */
-    public Optional<SportsActivity> getSportDetailsById (String id){
+    public Optional<SportsActivity> getSportDetailsById(String id) {
         Optional<SportsActivity> sports = sportsActivityRepository.findById(id);
         return sports;
     }
@@ -115,15 +117,18 @@ public class SportsActivityServiceImpl implements SportsActivityService{
     public List<StudentResponseDto> getStudentsInSport(String sportId) {
         try {
             Optional<SportsActivity> sportsActivity = getSportDetailsById(sportId);
-            if(sportsActivity.isPresent()){
+            if (sportsActivity.isPresent()) {
                 List<Student> students = sportsActivityRepository.findStudentsBySports(sportId);
                 return students.stream().map(StudentResponseDto::new).collect(Collectors.toList());
-            } else {
-               return null;
             }
+            return new ArrayList<>();
         } catch (Exception e) {
             logger.error("An error occurred while retrieving the students in sport id: {}", sportId, e);
             throw new StudentException("Failed to retrieve the students in sport id " + sportId, e);
         }
+    }
+
+    public boolean isSportsActivityExist(String sportId) {
+        return sportsActivityRepository.existsById(sportId);
     }
 }

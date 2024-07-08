@@ -156,7 +156,7 @@ public class StudentController {
      * </p>
      *
      * @param id                      This is the unique id that must be uuid.
-     * @param createStudentRequestDto This contains updated student name, date of birth, standard and address details.
+     * @param createStudentRequestDto {@link CreateStudentRequestDto}
      * @return StudentResponseDto that includes all the updated details of the student.
      **/
     @PutMapping("/{id}")
@@ -185,6 +185,9 @@ public class StudentController {
         logger.info("Starting to update student with ID {}", id);
         try {
             StudentResponseDto studentResponseDto = studentService.updateStudent(id, createStudentRequestDto);
+            if(null == studentResponseDto){
+                return new ResponseEntity<>("Student id " + id + " not exists", HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(studentResponseDto, HttpStatus.OK);
         } catch (StudentException e) {
             logger.error("Error updating student with ID {}", id, e);

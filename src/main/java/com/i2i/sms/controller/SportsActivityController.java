@@ -102,13 +102,18 @@ public class SportsActivityController {
     public ResponseEntity<?> displayStudentsInSport(@PathVariable String id) {
         logger.info("Displaying students in sport id {}", id);
         try {
-            List<StudentResponseDto> students = sportsActivityService.getStudentsInSport(id);
-            if (students.isEmpty()) {
-                logger.info("No students Available in sport id {}", id);
-                return new ResponseEntity<>("No students available in sport id " + id,  HttpStatus.NOT_FOUND);
+            if(sportsActivityService.isSportsActivityExist(id)) {
+                List<StudentResponseDto> students = sportsActivityService.getStudentsInSport(id);
+                if (students.isEmpty()) {
+                    logger.info("No students available in sport id {}", id);
+                    return new ResponseEntity<>("No students available in sport id " + id ,HttpStatus.OK);
+                } else {
+                    logger.info("Retrieved students in sport id {}", id);
+                    return new ResponseEntity<>(students, HttpStatus.FOUND);
+                }
             } else {
-                logger.info("Retrieved students in sport id {}", id);
-                return new ResponseEntity<>(students, HttpStatus.FOUND);
+                logger.info("No sport id {}", id);
+                return new ResponseEntity<>("No sport id " + id, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             logger.error("Error displaying students in sport", e);

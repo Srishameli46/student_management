@@ -33,7 +33,7 @@ public class AddressServiceImpl implements AddressService{
      */
     public AddressResponseDto getAddressByStudentId(String studentId) {
         try {
-            Optional<Address> address =  addressRepository.findById(studentId);
+            Optional<Address> address =  addressRepository.findByStudentId(studentId);
             if(address.isPresent()){
                 Address addressDetail = address.get();
                 return new AddressResponseDto(addressDetail);

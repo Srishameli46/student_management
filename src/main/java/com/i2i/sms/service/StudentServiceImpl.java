@@ -62,10 +62,6 @@ public class StudentServiceImpl implements StudentService {
             if (createStudentRequestDto == null || createStudentRequestDto.getAddress() == null) {
                 throw new StudentException("Invalid input data", null);
             }
-
-            if (!DateUtils.isValidPastDate(createStudentRequestDto.getDob())) {
-                throw new StudentException("Invalid date of birth", null);
-            }
             Address address = convertToEntity(createStudentRequestDto.getAddress());
             Grade grade = gradeService.addGrade(createStudentRequestDto.getStandard());
             Student student = new Student();
@@ -185,7 +181,7 @@ public class StudentServiceImpl implements StudentService {
                 studentToUpdate = studentRepository.save(studentToUpdate);
                 return new StudentResponseDto(studentToUpdate);
             } else {
-                throw new StudentException("Student not found with ID " + id, null);
+                return null;
             }
         } catch (Exception e) {
             logger.error("An error occurred while updating the student: {}", createStudentRequestDto.getName(), e);
