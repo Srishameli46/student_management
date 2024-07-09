@@ -1,10 +1,12 @@
 package com.i2i.sms.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.i2i.sms.models.Grade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +36,11 @@ public class SportsActivityServiceImpl implements SportsActivityService {
     /**
      * <p>
      * Create new sports Activity that students need to participate .
-     * This contains the details of the sports such as sport id, sport name, venue, date-of-joining and sport tutor which has to be added.
+     * This contains the details of the sports such as sport id, sport name, venue and sport tutor which has to be added.
      * </p>
      *
      * @param createSportsRequestDto sports details contains sport name, venue, tutor name.
-     * @return SportsInfo this provides all the information of that sport.
+     * @return SportsResponseDto this provides all the information of that sport.
      */
     public SportsResponseDto addSport(CreateSportsRequestDto createSportsRequestDto) {
         try {
@@ -59,7 +61,8 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * </p>
      *
      * @return details of all the sports activity
-     * such as sport id, sport name, venue, date-of-joining and sport tutor which has to be added.
+     * such as sport id, sport name, venue and sport tutor which has to be added.
+     * @throws StudentException when the sports can not be accessed.
      */
     public List<SportsResponseDto> getAllSportsActivities() {
         try {
@@ -78,6 +81,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      *
      * @param sportId SportId is get from the user that should be allowed only in numerical.
      * @return true if the sportActivity deleted or else return false.
+     * @throws StudentException when the sports can not be deleted.
      */
     public boolean removeSportById(String sportId) {
         try {
@@ -100,6 +104,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      *
      * @param id SportId is get from the user that should be allowed only in numerical.
      * @return details of all the sports details in that particular sports activity.
+     * @throws StudentException when the sports can not be accessed.
      */
     public Optional<SportsActivity> getSportDetailsById(String id) {
         Optional<SportsActivity> sports = sportsActivityRepository.findById(id);
@@ -113,21 +118,63 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      *
      * @param sportId SportId is get from the user that should be allowed only in numerical.
      * @return details of all the students in that particular sports activity.
+     * @throws StudentException when the sports can not be accessed.
      */
     public List<StudentResponseDto> getStudentsInSport(String sportId) {
         try {
             Optional<SportsActivity> sportsActivity = getSportDetailsById(sportId);
-            if (sportsActivity.isPresent()) {
-                List<Student> students = sportsActivityRepository.findStudentsBySports(sportId);
-                return students.stream().map(StudentResponseDto::new).collect(Collectors.toList());
+            if (!sportsActivity.isPresent()) {
+                logger.warn("No sports activity found with id: {}", sportId);
+                return Collections.emptyList();
             }
-            return new ArrayList<>();
+            List<Student> students = sportsActivityRepository.findStudentsBySports(sportId);
+            return students.stream().map(StudentResponseDto::new).collect(Collectors.toList());
+
         } catch (Exception e) {
             logger.error("An error occurred while retrieving the students in sport id: {}", sportId, e);
             throw new StudentException("Failed to retrieve the students in sport id " + sportId, e);
         }
     }
 
+    /**
+     * <p>
+     * Update sports Activity that students need to participate .
+     * This updates the details of the sports such as sport name, venue and sport tutor which has to be added.
+     * </p>
+     *
+     * @param id                     This is the unique sports id that is represented in uuid.
+     * @param createSportsRequestDto sports details contains sport name, venue, tutor name.
+     * @return SportsResponseDto this provides all the information of that sport.
+     * @throws StudentException when the sports can not be updated.
+     */
+    public SportsResponseDto updateSports(String id, CreateSportsRequestDto createSportsRequestDto) {
+        try {
+            logger.debug("Started to update sports details");
+            Optional<SportsActivity> sports = sportsActivityRepository.findById(id);
+            if (sports.isPresent()) {
+                SportsActivity sportsActivity = sports.get();
+                sportsActivity.setSportName(createSportsRequestDto.getSportName());
+                sportsActivity.setVenue(createSportsRequestDto.getVenue());
+                sportsActivity.setTutorName(createSportsRequestDto.getTutorName());
+                sportsActivity = sportsActivityRepository.save(sportsActivity);
+                return new SportsResponseDto(sportsActivity);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("An error occurred while updating the sports: {}", createSportsRequestDto.getSportName(), e);
+            throw new StudentException("Failed to update sport with ID " + id, e);
+        }
+    }
+
+    /**
+     * <p>
+     * Check whether the given sports Activity present or not .
+     * </p>
+     *
+     * @param sportId This is the unique sport id represented in uuid.
+     * @return true if the sport activity presents else return false.
+     */
     public boolean isSportsActivityExist(String sportId) {
         return sportsActivityRepository.existsById(sportId);
     }

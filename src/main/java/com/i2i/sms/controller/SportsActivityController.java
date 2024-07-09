@@ -1,12 +1,19 @@
 package com.i2i.sms.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.i2i.sms.dto.CreateStudentRequestDto;
+import com.i2i.sms.exception.StudentException;
+import com.i2i.sms.models.Grade;
+import com.i2i.sms.models.SportsActivity;
+import com.i2i.sms.models.Student;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.i2i.sms.dto.CreateSportsRequestDto;
@@ -26,7 +33,7 @@ import com.i2i.sms.utils.DateUtils;
  * </p>
  */
 @RestController
-@RequestMapping("sms/api/v1/sportsActivities")
+@RequestMapping("/v1/sportsActivities")
 public class SportsActivityController {
     private static final Logger logger = LogManager.getLogger(SportsActivityController.class);
     @Autowired
@@ -52,15 +59,15 @@ public class SportsActivityController {
         }
         try {
             SportsResponseDto sportsActivityInfo = sportsActivityService.addSport(createSportsRequestDto);
-            if (null == sportsActivityInfo) {
+            if (ObjectUtils.isEmpty(sportsActivityInfo)) {
                 logger.info("Failed to create sport activity {}", createSportsRequestDto.getSportName());
-                return new ResponseEntity<>("Failed to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.BAD_REQUEST );
+                return new ResponseEntity<>("Failed to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.BAD_REQUEST);
             } else {
                 logger.info("Created sports activity {}", createSportsRequestDto.getSportName());
                 return new ResponseEntity<>(sportsActivityInfo, HttpStatus.CREATED);
             }
         } catch (Exception e) {
-            logger.error("Error creating sport activity {}",createSportsRequestDto.getSportName(), e);
+            logger.error("Error creating sport activity {}", createSportsRequestDto.getSportName(), e);
             return new ResponseEntity<>("Unable to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,15 +105,15 @@ public class SportsActivityController {
      * @param id This is the unique sport id that must be uuid.
      * @return StudentResponseDto contains details of the student along with grade.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/students")
     public ResponseEntity<?> displayStudentsInSport(@PathVariable String id) {
         logger.info("Displaying students in sport id {}", id);
         try {
-            if(sportsActivityService.isSportsActivityExist(id)) {
+            if (sportsActivityService.isSportsActivityExist(id)) {
                 List<StudentResponseDto> students = sportsActivityService.getStudentsInSport(id);
                 if (students.isEmpty()) {
                     logger.info("No students available in sport id {}", id);
-                    return new ResponseEntity<>("No students available in sport id " + id ,HttpStatus.OK);
+                    return new ResponseEntity<>("No students available in sport id " + id, HttpStatus.NOT_FOUND);
                 } else {
                     logger.info("Retrieved students in sport id {}", id);
                     return new ResponseEntity<>(students, HttpStatus.OK);
@@ -142,6 +149,40 @@ public class SportsActivityController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ResponseEntity<>("Error in removing sport activities", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * <p>
+     * Update sports Activity that students need to participate .
+     * This updates the details of the sports such as sport name, venue and sport tutor which has to be added.
+     * </p>
+     *
+     * @param id                     This is the unique sports id that is represented in uuid.
+     * @param createSportsRequestDto sports details contains sport name, venue, tutor name.
+     * @return SportsResponseDto this provides all the information of that sport.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateSports(@PathVariable String id, @RequestBody CreateSportsRequestDto createSportsRequestDto) {
+        logger.info("Starting to update sport activity");
+        if (!DataValidationUtils.validString(createSportsRequestDto.getSportName())) {
+            return new ResponseEntity<>("Invalid sport name format", HttpStatus.BAD_REQUEST);
+        }
+        if (!DataValidationUtils.validString(createSportsRequestDto.getTutorName())) {
+            return new ResponseEntity<>("Invalid tutor name format", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            SportsResponseDto sportsActivityInfo = sportsActivityService.updateSports(id, createSportsRequestDto);
+            if (null == sportsActivityInfo) {
+                logger.info("Failed to update sport activity {}", createSportsRequestDto.getSportName());
+                return new ResponseEntity<>("Failed to update sport id " + id, HttpStatus.BAD_REQUEST);
+            } else {
+                logger.info("Update sports activity {}", createSportsRequestDto.getSportName());
+                return new ResponseEntity<>(sportsActivityInfo, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            logger.error("Error updating sport activity {}", createSportsRequestDto.getSportName(), e);
+            return new ResponseEntity<>("Unable to update sport id " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

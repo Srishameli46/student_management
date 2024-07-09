@@ -15,6 +15,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -102,18 +104,4 @@ public class Student {
         this.sportsActivities = sportsActivities;
     }
 
-    public void addSportsActivity(SportsActivity sportsActivity) {
-        if (null == sportsActivities) {
-            sportsActivities = new HashSet<>();
-        }
-        if (!sportsActivities.contains(sportsActivity)) {
-            sportsActivities.add(sportsActivity);
-        }
-    }
-
-    public void removeSportsActivity(SportsActivity sportsActivity) {
-        if (sportsActivities != null && sportsActivities.contains(sportsActivity)) {
-            sportsActivities.remove(sportsActivity);
-        }
-    }
 }

@@ -21,7 +21,7 @@ import com.i2i.sms.service.AddressService;
  * </p>
  */
 @RestController
-@RequestMapping("sms/api/v1/address")
+@RequestMapping("/v1/address")
 public class AddressController {
     private static final Logger logger = LogManager.getLogger(AddressController.class);
     @Autowired

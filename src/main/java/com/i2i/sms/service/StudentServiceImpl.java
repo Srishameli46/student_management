@@ -1,9 +1,6 @@
 package com.i2i.sms.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -39,12 +36,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
-
     @Autowired
     private GradeService gradeService;
     @Autowired
     private AddressService addressService;
-
     @Autowired
     private SportsActivityService sportsActivityService;
 
@@ -55,6 +50,7 @@ public class StudentServiceImpl implements StudentService {
      *
      * @param createStudentRequestDto This createStudentRequestDto contains details like student name, date of birth, standard and address.
      * @return the details of the single student.
+     * @throws StudentException when the student can not be created.
      */
     public StudentResponseDto addStudent(CreateStudentRequestDto createStudentRequestDto) {
         try {
@@ -84,6 +80,7 @@ public class StudentServiceImpl implements StudentService {
      * </p>
      *
      * @return all student details with associated grade and address.
+     * @throws StudentException when the students can not be accessed.
      */
     public List<StudentResponseDto> getAllStudents() {
         logger.debug("Started to retrieve student details");
@@ -103,6 +100,7 @@ public class StudentServiceImpl implements StudentService {
      *
      * @param id Student unique Id given in integer alone.
      * @return details of the student by the id given to search.
+     * @throws StudentException when the student can not be searched.
      */
     public StudentWithAllDetailsDto searchStudentById(String id) {
         logger.debug("Started to search student details");
@@ -125,7 +123,8 @@ public class StudentServiceImpl implements StudentService {
      * </p>
      *
      * @param id Student unique id given in integer alone.
-     * @ return  the checking parameter whether the id removed or not by true or false.
+     * @return the checking parameter whether the id removed or not by true or false.
+     * @throws StudentException when the student can not be deleted.
      */
     public boolean removeStudentById(String id) {
         logger.debug("Started to delete student details");
@@ -160,6 +159,7 @@ public class StudentServiceImpl implements StudentService {
      * @param id                      The id of the student to update.
      * @param createStudentRequestDto The updated student details.
      * @return the details of the updated student.
+     * @throws StudentException when the student can not be updated.
      */
     public StudentResponseDto updateStudent(String id, CreateStudentRequestDto createStudentRequestDto) {
         try {
@@ -195,7 +195,7 @@ public class StudentServiceImpl implements StudentService {
      * </p>
      *
      * @param createAddressRequestDto address details of the student .
-     * @ return  the checking parameter whether the id removed or not by true or false.
+     * @return the checking parameter whether the id removed or not by true or false.
      */
     private Address convertToEntity(CreateAddressRequestDto createAddressRequestDto) {
         Address address = new Address();
@@ -215,31 +215,35 @@ public class StudentServiceImpl implements StudentService {
      * @param studentId                     student id is the studentId get from the student details.
      * @param createStudentSportsRequestDto this contains student details along with grade and their sports details.
      * @return sports details that the student allowed to participate.
+     * @throws StudentException when the student can not be assigned to sports.
      */
     public List<SportsResponseDto> addStudentToSportActivity(String studentId, CreateStudentSportsRequestDto createStudentSportsRequestDto) {
         try {
             List<String> sportIds = createStudentSportsRequestDto.getSportIds();
             Optional<Student> foundStudent = studentRepository.findById(studentId);
-            if (foundStudent.isPresent()) {
-                Student student = foundStudent.get();
-                Set<SportsActivity> sportsActivities = student.getSportsActivities();
-                for (String sportId : sportIds) {
-                    Optional<SportsActivity> sportsActivityDetail = sportsActivityService.getSportDetailsById(sportId);
-                    if (sportsActivityDetail.isPresent()) {
-                        SportsActivity sportsActivity = sportsActivityDetail.get();
-                        sportsActivities.add(sportsActivity);
-                    } else {
-                        return new ArrayList<>();
-                    }
-                }
-                studentRepository.save(student);
-                return sportsActivities.stream().map(SportsResponseDto::new).collect(Collectors.toList());
+            if (!foundStudent.isPresent()) {
+                logger.warn("No sports activity found with id: {}", sportIds);
+                return Collections.emptyList();
             }
-            return null;
+
+            Student student = foundStudent.get();
+            Set<SportsActivity> sportsActivities = student.getSportsActivities();
+            for (String sportId : sportIds) {
+                Optional<SportsActivity> sportsActivityDetail = sportsActivityService.getSportDetailsById(sportId);
+                if (sportsActivityDetail.isPresent()) {
+                    SportsActivity sportsActivity = sportsActivityDetail.get();
+                    sportsActivities.add(sportsActivity);
+                } else {
+                    return new ArrayList<>();
+                }
+            }
+            studentRepository.save(student);
+            return sportsActivities.stream().map(SportsResponseDto::new).collect(Collectors.toList());
+
+
         } catch (Exception e) {
             logger.error("An error occurred while assigning the sports to student id: {}", studentId, e);
             throw new StudentException("Failed to assign sport to student id  " + studentId, e);
         }
     }
-
 }

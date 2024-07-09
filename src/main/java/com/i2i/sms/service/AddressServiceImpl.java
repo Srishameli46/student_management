@@ -30,6 +30,7 @@ public class AddressServiceImpl implements AddressService{
      *
      * @param studentId Student unique Id given in uuid.
      * @return a address of the student.
+     * @throws StudentException when the address can not be accessed.
      */
     public AddressResponseDto getAddressByStudentId(String studentId) {
         try {
@@ -40,10 +41,9 @@ public class AddressServiceImpl implements AddressService{
             } else {
                 return null;
             }
-
         } catch (Exception e) {
-            logger.error("An error occurred while saving the student: {}", studentId, e);
-            throw new StudentException("Failed to save student with ID " + studentId, e);
+            logger.error("An error occurred while retrieving address of the student id: {}", studentId, e);
+            throw new StudentException("Failed to retrieve address of the student id " + studentId, e);
         }
     }
 
@@ -53,7 +53,7 @@ public class AddressServiceImpl implements AddressService{
      * </p>
      *
      * @param addressId Student unique Id given in uuid.
-     *
+     * @throws StudentException when the address can not be deleted.
      */
     public void deleteById(String addressId) {
         try {
@@ -63,8 +63,8 @@ public class AddressServiceImpl implements AddressService{
                 addressRepository.deleteById(addressToDelete.getAddressId());
             }
         } catch (Exception e) {
-            logger.error("An error occurred while retrieving the address: {}", addressId, e);
-            throw new StudentException("Failed to retrieve address with ID " + addressId, e);
+            logger.error("An error occurred while deleting the address: {}", addressId, e);
+            throw new StudentException("Failed to delete address with ID " + addressId, e);
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.i2i.sms.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,8 +32,14 @@ public class GradeServiceImpl implements GradeService {
     private static final Logger logger = LogManager.getLogger(GradeServiceImpl.class);
     @Autowired
     private GradeRepository gradeRepository;
-    private int sectionCount = 0;
-    private final String[] sections = {"A", "B"};
+
+    private final Map<String, Integer> sectionCounts = new HashMap<String, Integer>() {
+        {
+            put("A", 0);
+            put("B", 0);
+        }
+    };
+    private static final int maximumStudentPerSection = 4;
 
     /**
      * <p>
@@ -40,7 +49,7 @@ public class GradeServiceImpl implements GradeService {
      *
      * @param standard The standard given for the student as 1 to 12.
      * @return grade details which includes section, standard, and gradeId.
-     *
+     * @throws StudentException when the grade can not be created.
      */
     public Grade addGrade(int standard) {
         try {
@@ -57,28 +66,32 @@ public class GradeServiceImpl implements GradeService {
             return grade;
         } catch (Exception e) {
             logger.error("An error occurred while saving the standard: {}", standard, e);
-            throw new StudentException("Failed to save standard  " + standard, e);
+            throw new StudentException("Failed to save standard " + standard, e);
         }
     }
 
-
     /**
      * <p>
-     * Allocate section for each standards.
+     * Allocate section for each standard.
      * </p>
      * <p>
-     * Ex : Id=1, Section=A
-     * Ex : Id=22, Section=B
-     * Ex : Id=12, Section=A
+     * Students will allocate for 'A' section when it reaches count 4,
+     * it starts with 'B' section.
      * </p>
      *
      * @return Section as String
+     * @throws StudentException when both sections are full.
      */
     private String allocateSection() {
-        // For first Id it allocated 'A' section, next Id with 'B' section in iterative manner
-        String section = sections[sectionCount % sections.length];
-        sectionCount++;
-        return section;
+        if (sectionCounts.get("A") < maximumStudentPerSection) {
+            sectionCounts.put("A", sectionCounts.get("A") + 1);
+            return "A";
+        } else if (sectionCounts.get("B") < maximumStudentPerSection) {
+            sectionCounts.put("B", sectionCounts.get("B") + 1);
+            return "B";
+        } else {
+            throw new StudentException("Both sections are full");
+        }
     }
 
     /**
@@ -87,6 +100,7 @@ public class GradeServiceImpl implements GradeService {
      * </p>
      *
      * @return all the standard and sections within the grade along with their students.
+     * @throws StudentException when the grade can not be accessed.
      */
     public List<GradeWithStudentsResponseDto> getAllGrades() {
         try {
@@ -96,5 +110,40 @@ public class GradeServiceImpl implements GradeService {
             logger.error("An error occurred while retrieving the grades", e);
             throw new StudentException("Failed to get all details ", e);
         }
+    }
+
+    /**
+     * <p>
+     * This method gets all the students in a particular grade and section.
+     * </p>
+     *
+     * @param id The grade id for which the students have to be fetched.
+     * @return GradeWithStudentResponseDto {@link GradeWithStudentsResponseDto} .
+     * @throws StudentException when the grade can not be accessed.
+     */
+    public GradeWithStudentsResponseDto findStudentsByGradeId(String id) {
+        try {
+            logger.debug("Finding students in grade id {}", id);
+            Optional<Grade> existingGrade = gradeRepository.findById(id);
+            if (existingGrade.isPresent()) {
+                Grade grade = existingGrade.get();
+                return new GradeWithStudentsResponseDto(grade);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new StudentException("Unable to find students in grade id " + id, e);
+        }
+    }
+
+    /**
+     * <p>
+     * Checks if a grade exists for a given grade ID.
+     * </p>
+     *
+     * @param gradeId The ID of the grade to check.
+     * @return true if the grade exists, false otherwise.
+     */
+    public boolean isGradeAvailable(String gradeId) {
+        return gradeRepository.existsById(gradeId);
     }
 }

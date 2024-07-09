@@ -13,9 +13,7 @@ import com.i2i.sms.models.Grade;
 public class GradeResponseDto {
 
     private String gradeId;
-
     private int standard;
-
     private String section;
 
     public GradeResponseDto(Grade grade) {

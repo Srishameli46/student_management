@@ -22,5 +22,4 @@ public interface StudentService {
     boolean removeStudentById(String id);
     StudentResponseDto updateStudent(String id, CreateStudentRequestDto createStudentRequestDto);
     List<SportsResponseDto> addStudentToSportActivity(String studentId, CreateStudentSportsRequestDto createStudentSportsRequestDto);
-
 }

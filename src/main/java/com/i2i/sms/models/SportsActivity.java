@@ -77,26 +77,4 @@ public class SportsActivity {
        this.students = students;
     }
 
-    public void addStudent(Student student) {
-        if (!students.contains(student)) {
-            students.add(student);
-        }
-    }
-
-    public void removeStudent(Student student) {
-        if (students.contains(student)) {
-            students.remove(student);
-            student.removeSportsActivity(this);
-        }
-    }
-
-    public String toString() {
-        StringBuilder details = new StringBuilder();
-        details.append("....SPORTS ACTIVITY....\n")
-                .append(" Sports Id : ").append(sportId).append("\n")
-                .append(" Sports Name : ").append(sportName).append("\n")
-                .append(" Venue : ").append(venue).append("\n")
-                .append(" Tutor Name : ").append(tutorName).append("\n");
-        return details.toString();
-    }
 }

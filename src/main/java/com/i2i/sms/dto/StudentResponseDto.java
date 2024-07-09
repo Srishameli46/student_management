@@ -8,7 +8,7 @@ import com.i2i.sms.utils.DateUtils;
 /**
  * <p>
  * Class representing a student which contains details about the student
- * such as ID, name, date of birth, associated grade, address and their sportsActivity.
+ * such as ID, name, date of birth, associated grade, address.
  * </p>
  */
 public class StudentResponseDto {

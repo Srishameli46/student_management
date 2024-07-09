@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * <p>
  * Class representing a sports activity which contains details about the sports
- * such as sport ID,sport name, venue, tutor name.
+ * such as sport name, venue, tutor name.
  * </p>
  */
 public class CreateSportsRequestDto {

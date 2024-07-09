@@ -100,5 +100,4 @@ public class Address {
         this.pinCode = pinCode;
     }
 
-
 }

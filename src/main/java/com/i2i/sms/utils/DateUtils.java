@@ -23,7 +23,8 @@ public final class DateUtils {
      */
     public static boolean isValidPastDate(LocalDate inputDate) {
         try {
-            LocalDate.parse(inputDate.toString());
+            String date = inputDate.toString();
+            LocalDate.parse(date);
             return inputDate.isBefore(LocalDate.now());
         } catch(DateTimeParseException e) {
             return false;
