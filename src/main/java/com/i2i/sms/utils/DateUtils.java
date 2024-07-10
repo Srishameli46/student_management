@@ -4,32 +4,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeParseException;
 
-@Component
 public final class DateUtils {
-
-    /**
-     * <p>
-     * Checks given date in format(yyyy-mm-dd) or not
-     * </p>
-     *
-     * @param inputDate holds the date in string in format of (yyyy-MM-dd).
-     * @return true or false
-     * If the date format is correct,return true .
-     * If the format is not correct, returns false.
-     * This exception is raised when unable to parse another date format.
-     * Ex: (yyyy/mm/dd)
-     */
-    public static boolean isValidPastDate(LocalDate inputDate) {
-        try {
-            String date = inputDate.toString();
-            LocalDate.parse(date);
-            return inputDate.isBefore(LocalDate.now());
-        } catch(DateTimeParseException e) {
-            return false;
-        }
-    }
 
     /**
      * <p>

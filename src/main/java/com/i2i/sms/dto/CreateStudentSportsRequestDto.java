@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * <p>
- * Class representing a student which contains details about the sport ids.
+ * Class representing the sports that students preferred to join, this contains details about the sport ids.
  * </p>
  */
 public class CreateStudentSportsRequestDto {

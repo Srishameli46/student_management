@@ -2,11 +2,14 @@ package com.i2i.sms.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.i2i.sms.dto.CreateStudentRequestDto;
@@ -16,8 +19,6 @@ import com.i2i.sms.dto.StudentResponseDto;
 import com.i2i.sms.dto.StudentWithAllDetailsDto;
 import com.i2i.sms.exception.StudentException;
 import com.i2i.sms.service.StudentService;
-import com.i2i.sms.utils.DataValidationUtils;
-import com.i2i.sms.utils.DateUtils;
 
 
 /**
@@ -29,6 +30,7 @@ import com.i2i.sms.utils.DateUtils;
  * </p>
  */
 @RestController
+@Validated
 @RequestMapping("/v1/students")
 public class StudentController {
 
@@ -38,32 +40,14 @@ public class StudentController {
 
     /**
      * <p>
-     * Create student details such as name, Date of birth and standard.
+     * Create student details such as name, Date of birth, standard and address.
      * </p>
      *
-     * @param createStudentRequestDto This contains student name, date of birth, standard and address details.
+     * @param createStudentRequestDto {@link CreateStudentRequestDto}
      * @return StudentResponseDto that includes all the details of the student.
      */
     @PostMapping
-    public ResponseEntity<?> createStudent(@RequestBody CreateStudentRequestDto createStudentRequestDto) {
-        if (!DataValidationUtils.validString(createStudentRequestDto.getName())) {
-            return new ResponseEntity<>("Invalid name format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DateUtils.isValidPastDate(createStudentRequestDto.getDob())) {
-            return new ResponseEntity<>("Invalid Date format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.isValidGrade(createStudentRequestDto.getStandard())) {
-            return new ResponseEntity<>("Invalid standard", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createStudentRequestDto.getAddress().getCity())) {
-            return new ResponseEntity<>("Invalid city name", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createStudentRequestDto.getAddress().getState())) {
-            return new ResponseEntity<>("Invalid state name", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validPinCode(createStudentRequestDto.getAddress().getPinCode())) {
-            return new ResponseEntity<>("Invalid pin code", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> createStudent(@Valid @RequestBody CreateStudentRequestDto createStudentRequestDto) {
         logger.info("Starting to create a new student");
         try {
             StudentResponseDto studentResponseDto = studentService.addStudent(createStudentRequestDto);
@@ -110,12 +94,12 @@ public class StudentController {
         logger.info("Search student id {}", id);
         try {
             StudentWithAllDetailsDto foundStudent = studentService.searchStudentById(id);
-            if (null != foundStudent) {
-                logger.info("Searched student ID: {} founded", id);
-                return new ResponseEntity<>(foundStudent, HttpStatus.OK);
-            } else {
+            if (ObjectUtils.isEmpty(foundStudent)) {
                 logger.info("Searched student ID: {} not founded", id);
                 return new ResponseEntity<>("Student id  " + id + " not found", HttpStatus.NOT_FOUND);
+            } else {
+                logger.info("Searched student ID: {} founded", id);
+                return new ResponseEntity<>(foundStudent, HttpStatus.OK);
             }
         } catch (StudentException e) {
             logger.error(e.getMessage());
@@ -153,39 +137,22 @@ public class StudentController {
      * </p>
      *
      * @param id                      This is the unique id that must be uuid.
-     * @param createStudentRequestDto {@link CreateStudentRequestDto}
+     * @param createStudentRequestDto {@link CreateStudentRequestDto} updated student details.
      * @return StudentResponseDto that includes all the updated details of the student.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateStudent(@PathVariable String id, @RequestBody CreateStudentRequestDto createStudentRequestDto) {
-        if (!DataValidationUtils.validString(createStudentRequestDto.getName())) {
-            return new ResponseEntity<>("Invalid name format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DateUtils.isValidPastDate(createStudentRequestDto.getDob())) {
-            return new ResponseEntity<>("Invalid Date format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.isValidGrade(createStudentRequestDto.getStandard())) {
-            return new ResponseEntity<>("Invalid standard", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createStudentRequestDto.getAddress().getCity())) {
-            return new ResponseEntity<>("Invalid city name", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createStudentRequestDto.getAddress().getState())) {
-            return new ResponseEntity<>("Invalid state name", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validPinCode(createStudentRequestDto.getAddress().getPinCode())) {
-            return new ResponseEntity<>("Invalid pin code", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> updateStudent(@PathVariable String id,@Valid @RequestBody CreateStudentRequestDto createStudentRequestDto) {
+
         logger.info("Starting to update student with ID {}", id);
         try {
             StudentResponseDto studentResponseDto = studentService.updateStudent(id, createStudentRequestDto);
-            if (null == studentResponseDto) {
+            if (ObjectUtils.isEmpty(studentResponseDto)) {
                 return new ResponseEntity<>("Student id " + id + " not exists", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(studentResponseDto, HttpStatus.OK);
         } catch (StudentException e) {
             logger.error("Error updating student with ID {}", id, e);
-            return new ResponseEntity<>("Student not updated", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Student id" + id + " not updated", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -204,7 +171,7 @@ public class StudentController {
         try {
             StudentWithAllDetailsDto student = studentService.searchStudentById(id);
             List<SportsResponseDto> sports = studentService.addStudentToSportActivity(id, createStudentSportsRequestDto);
-            if (null == student) {
+            if (ObjectUtils.isEmpty(student)) {
                 logger.info("Student id {} not found", id);
                 return new ResponseEntity<>("Student id " + id + "not found", HttpStatus.NOT_FOUND);
             } else if (sports.isEmpty()) {

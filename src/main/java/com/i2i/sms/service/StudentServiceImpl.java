@@ -3,7 +3,6 @@ package com.i2i.sms.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import com.i2i.sms.models.Address;
 import com.i2i.sms.models.Grade;
 import com.i2i.sms.models.Student;
 import com.i2i.sms.repository.StudentRepository;
-import com.i2i.sms.utils.DateUtils;
 
 /**
  * <p>
@@ -59,7 +57,7 @@ public class StudentServiceImpl implements StudentService {
                 throw new StudentException("Invalid input data", null);
             }
             Address address = convertToEntity(createStudentRequestDto.getAddress());
-            Grade grade = gradeService.addGrade(createStudentRequestDto.getStandard());
+            Grade grade = gradeService.addGrade(createStudentRequestDto.getGrade().getStandard());
             Student student = new Student();
             student.setName(createStudentRequestDto.getName());
             student.setDob(createStudentRequestDto.getDob());
@@ -129,9 +127,9 @@ public class StudentServiceImpl implements StudentService {
     public boolean removeStudentById(String id) {
         logger.debug("Started to delete student details");
         try {
-            Optional<Student> studentOptional = studentRepository.findById(id);
-            if (studentOptional.isPresent()) {
-                Student studentToDelete = studentOptional.get();
+            Optional<Student> student = studentRepository.findById(id);
+            if (student.isPresent()) {
+                Student studentToDelete = student.get();
                 studentToDelete.getGrade().getStudents().remove(studentToDelete);
                 for (SportsActivity sportsActivity : studentToDelete.getSportsActivities()) {
                     sportsActivity.getStudents().remove(studentToDelete);
@@ -157,20 +155,20 @@ public class StudentServiceImpl implements StudentService {
      * </p>
      *
      * @param id                      The id of the student to update.
-     * @param createStudentRequestDto The updated student details.
+     * @param createStudentRequestDto {@link CreateStudentRequestDto} updated student details.
      * @return the details of the updated student.
      * @throws StudentException when the student can not be updated.
      */
     public StudentResponseDto updateStudent(String id, CreateStudentRequestDto createStudentRequestDto) {
         try {
             logger.debug("Started to update student details");
-            Optional<Student> studentOptional = studentRepository.findById(id);
-            if (studentOptional.isPresent()) {
-                Student studentToUpdate = studentOptional.get();
+            Optional<Student> student = studentRepository.findById(id);
+            if (student.isPresent()) {
+                Student studentToUpdate = student.get();
                 studentToUpdate.setName(createStudentRequestDto.getName());
                 studentToUpdate.setDob(createStudentRequestDto.getDob());
-                if (studentToUpdate.getGrade().getStandard() != createStudentRequestDto.getStandard()) {
-                    Grade grade = gradeService.addGrade(createStudentRequestDto.getStandard());
+                if (studentToUpdate.getGrade().getStandard() != createStudentRequestDto.getGrade().getStandard()) {
+                    Grade grade = gradeService.addGrade(createStudentRequestDto.getGrade().getStandard());
                     studentToUpdate.setGrade(grade);
                 }
                 studentToUpdate.getAddress().setDoorNo(createStudentRequestDto.getAddress().getDoorNo());

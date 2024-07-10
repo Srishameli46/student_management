@@ -1,12 +1,10 @@
 package com.i2i.sms.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.i2i.sms.models.Grade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * @return SportsResponseDto this provides all the information of that sport.
      */
     public SportsResponseDto addSport(CreateSportsRequestDto createSportsRequestDto) {
+        logger.debug("Started to create sports");
         try {
             SportsActivity sportsActivity = new SportsActivity();
             sportsActivity.setSportName(createSportsRequestDto.getSportName());
@@ -65,6 +64,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * @throws StudentException when the sports can not be accessed.
      */
     public List<SportsResponseDto> getAllSportsActivities() {
+        logger.debug("Started to display student details");
         try {
             List<SportsActivity> allSports = sportsActivityRepository.findAll();
             return allSports.stream().map(SportsResponseDto::new).collect(Collectors.toList());
@@ -84,6 +84,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * @throws StudentException when the sports can not be deleted.
      */
     public boolean removeSportById(String sportId) {
+        logger.debug("Started to remove sports");
         try {
             if (sportsActivityRepository.existsById(sportId)) {
                 sportsActivityRepository.deleteById(sportId);
@@ -107,6 +108,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * @throws StudentException when the sports can not be accessed.
      */
     public Optional<SportsActivity> getSportDetailsById(String id) {
+        logger.debug("Started to retrieve sports");
         Optional<SportsActivity> sports = sportsActivityRepository.findById(id);
         return sports;
     }
@@ -121,6 +123,7 @@ public class SportsActivityServiceImpl implements SportsActivityService {
      * @throws StudentException when the sports can not be accessed.
      */
     public List<StudentResponseDto> getStudentsInSport(String sportId) {
+
         try {
             Optional<SportsActivity> sportsActivity = getSportDetailsById(sportId);
             if (!sportsActivity.isPresent()) {

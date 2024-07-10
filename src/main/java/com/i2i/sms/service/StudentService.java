@@ -11,15 +11,20 @@ import com.i2i.sms.dto.StudentWithAllDetailsDto;
 /**
  * <p>
  * This student interface represents basic details.
- * Additionally, it stored information about the student's grade and address details.
+ * Additionally, it stored information about the student's grade,sports and address details.
  * Manage the information by the following operation like creating, retrieving and removing the students.
  * </p>
  */
 public interface StudentService {
     StudentResponseDto addStudent(CreateStudentRequestDto createStudentRequestDto);
+
     List<StudentResponseDto> getAllStudents();
+
     StudentWithAllDetailsDto searchStudentById(String id);
+
     boolean removeStudentById(String id);
+
     StudentResponseDto updateStudent(String id, CreateStudentRequestDto createStudentRequestDto);
+
     List<SportsResponseDto> addStudentToSportActivity(String studentId, CreateStudentSportsRequestDto createStudentSportsRequestDto);
 }

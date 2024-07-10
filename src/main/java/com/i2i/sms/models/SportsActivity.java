@@ -1,9 +1,18 @@
 package com.i2i.sms.models;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
-
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +40,7 @@ public class SportsActivity {
     @Column(name = "tutor_name", nullable = false, length = 30)
     private String tutorName;
 
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "student_sports_activity",
             joinColumns = @JoinColumn(name = "sport_id"),

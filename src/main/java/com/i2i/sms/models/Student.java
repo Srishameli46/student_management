@@ -15,7 +15,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.HashSet;

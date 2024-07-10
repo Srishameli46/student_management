@@ -52,6 +52,7 @@ public class GradeServiceImpl implements GradeService {
      * @throws StudentException when the grade can not be created.
      */
     public Grade addGrade(int standard) {
+        logger.debug("Starting to create grade");
         try {
             String section = allocateSection();
             Grade grade;
@@ -83,6 +84,7 @@ public class GradeServiceImpl implements GradeService {
      * @throws StudentException when both sections are full.
      */
     private String allocateSection() {
+        logger.debug("Started to create section");
         if (sectionCounts.get("A") < maximumStudentPerSection) {
             sectionCounts.put("A", sectionCounts.get("A") + 1);
             return "A";

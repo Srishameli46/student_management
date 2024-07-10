@@ -1,7 +1,5 @@
 package com.i2i.sms.dto;
 
-import java.time.LocalDate;
-
 import com.i2i.sms.models.SportsActivity;
 /**
  * <p>

@@ -1,5 +1,6 @@
 package com.i2i.sms.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +41,8 @@ public class Address {
     @Column(name = "pin_code",nullable = false, length = 7)
     private String pinCode;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 

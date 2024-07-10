@@ -1,6 +1,8 @@
 package com.i2i.sms.dto;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 
 /**
  * <p>
@@ -9,8 +11,15 @@ import java.time.LocalDate;
  * </p>
  */
 public class CreateSportsRequestDto {
+    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Sports name should contain only letters and space")
     private String sportName;
+
+    @NotBlank
     private String venue;
+
+    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Tutor name should contain only letters and space")
     private String tutorName;
 
     public String getSportName() {

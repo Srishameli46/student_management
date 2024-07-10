@@ -15,7 +15,10 @@ import com.i2i.sms.models.Grade;
  */
 public interface GradeService {
     Grade addGrade(int standard);
+
     List<GradeWithStudentsResponseDto> getAllGrades();
+
     GradeWithStudentsResponseDto findStudentsByGradeId(String id);
+
     boolean isGradeAvailable(String gradeId);
 }

@@ -9,6 +9,8 @@ import com.i2i.sms.models.Address;
  * </p>
  */
 public interface AddressService {
+
     AddressResponseDto getAddressByStudentId(String studentId);
+
     void deleteById(String addressId);
 }

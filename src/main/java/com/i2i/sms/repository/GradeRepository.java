@@ -17,5 +17,6 @@ import com.i2i.sms.models.Grade;
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, String> {
     Grade findByStandardAndSection(int standard, String section);
+
     boolean existsByStandardAndSection(int standard, String section);
 }

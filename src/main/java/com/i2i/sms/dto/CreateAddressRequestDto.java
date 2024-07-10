@@ -1,5 +1,7 @@
 package com.i2i.sms.dto;
 
+import jakarta.validation.constraints.Pattern;
+
 /**
  * <p>
  * Class representing the address of the student which contains details
@@ -9,8 +11,11 @@ package com.i2i.sms.dto;
 public class CreateAddressRequestDto {
     private String doorNo;
     private String street;
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "City name should contain only letters and space")
     private String city;
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "State name should contain only letters and space")
     private String state;
+    @Pattern(regexp = "^\\d{5,6}(?:[-\\s]\\d{4})?$", message = "Pin code should contain only 5 or 6 digits")
     private String pinCode;
     public String getDoorNo() {
         return doorNo;

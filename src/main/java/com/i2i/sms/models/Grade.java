@@ -1,5 +1,6 @@
 package com.i2i.sms.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,7 @@ public class Grade {
     @Column(name = "section", nullable = false, length = 2)
     private String section;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "grade", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Student> students = new HashSet<>();
 

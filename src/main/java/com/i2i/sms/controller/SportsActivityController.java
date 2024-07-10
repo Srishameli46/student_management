@@ -1,27 +1,21 @@
 package com.i2i.sms.controller;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.i2i.sms.dto.CreateStudentRequestDto;
-import com.i2i.sms.exception.StudentException;
-import com.i2i.sms.models.Grade;
-import com.i2i.sms.models.SportsActivity;
-import com.i2i.sms.models.Student;
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.i2i.sms.dto.CreateSportsRequestDto;
 import com.i2i.sms.dto.SportsResponseDto;
 import com.i2i.sms.dto.StudentResponseDto;
 import com.i2i.sms.service.SportsActivityService;
-import com.i2i.sms.utils.DataValidationUtils;
-import com.i2i.sms.utils.DateUtils;
 
 
 /**
@@ -33,6 +27,7 @@ import com.i2i.sms.utils.DateUtils;
  * </p>
  */
 @RestController
+@Validated
 @RequestMapping("/v1/sportsActivities")
 public class SportsActivityController {
     private static final Logger logger = LogManager.getLogger(SportsActivityController.class);
@@ -45,18 +40,12 @@ public class SportsActivityController {
      * This includes sport Id, sport name, venue, tutor name.
      * </p>
      *
-     * @param createSportsRequestDto This provides the details of the sport activity like name, venue, tutor name.
+     * @param createSportsRequestDto {@link CreateSportsRequestDto}
      * @return SportsResponseDto This gives details of the sports activity.
      */
     @PostMapping
-    public ResponseEntity<?> addSports(@RequestBody CreateSportsRequestDto createSportsRequestDto) {
-        logger.info("Starting to create a new sport activity");
-        if (!DataValidationUtils.validString(createSportsRequestDto.getSportName())) {
-            return new ResponseEntity<>("Invalid sport name format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createSportsRequestDto.getTutorName())) {
-            return new ResponseEntity<>("Invalid tutor name format", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> addSports(@Valid @RequestBody CreateSportsRequestDto createSportsRequestDto) {
+        logger.debug("Starting to create a new sport activity");
         try {
             SportsResponseDto sportsActivityInfo = sportsActivityService.addSport(createSportsRequestDto);
             if (ObjectUtils.isEmpty(sportsActivityInfo)) {
@@ -66,7 +55,7 @@ public class SportsActivityController {
                 logger.info("Created sports activity {}", createSportsRequestDto.getSportName());
                 return new ResponseEntity<>(sportsActivityInfo, HttpStatus.CREATED);
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
             logger.error("Error creating sport activity {}", createSportsRequestDto.getSportName(), e);
             return new ResponseEntity<>("Unable to create sport activity " + createSportsRequestDto.getSportName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -90,7 +79,7 @@ public class SportsActivityController {
                 return new ResponseEntity<>("No sports available", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(sports, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch(Exception e) {
             logger.error("Error displaying sports", e);
             return new ResponseEntity<>("Error in retrieving sports activities", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -163,17 +152,11 @@ public class SportsActivityController {
      * @return SportsResponseDto this provides all the information of that sport.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSports(@PathVariable String id, @RequestBody CreateSportsRequestDto createSportsRequestDto) {
+    public ResponseEntity<?> updateSports(@Valid @PathVariable String id, @RequestBody CreateSportsRequestDto createSportsRequestDto) {
         logger.info("Starting to update sport activity");
-        if (!DataValidationUtils.validString(createSportsRequestDto.getSportName())) {
-            return new ResponseEntity<>("Invalid sport name format", HttpStatus.BAD_REQUEST);
-        }
-        if (!DataValidationUtils.validString(createSportsRequestDto.getTutorName())) {
-            return new ResponseEntity<>("Invalid tutor name format", HttpStatus.BAD_REQUEST);
-        }
         try {
             SportsResponseDto sportsActivityInfo = sportsActivityService.updateSports(id, createSportsRequestDto);
-            if (null == sportsActivityInfo) {
+            if (ObjectUtils.isEmpty(sportsActivityInfo)) {
                 logger.info("Failed to update sport activity {}", createSportsRequestDto.getSportName());
                 return new ResponseEntity<>("Failed to update sport id " + id, HttpStatus.BAD_REQUEST);
             } else {
